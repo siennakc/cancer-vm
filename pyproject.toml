@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "oncoscope"
+version = "0.1.0"
+description = "LLM harness orchestrating vision models for cancer detection in medical images, with a gated self-improvement loop."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Sienna Chen", email = "siennakchen@gmail.com" }]
+dependencies = [
+    "numpy>=1.26",
+    "pydicom>=2.4",
+    "pyyaml>=6.0",
+    "pydantic>=2.5",
+]
+
+[project.optional-dependencies]
+agent = ["claude-agent-sdk>=0.1.0"]
+serving = ["fastapi>=0.110", "uvicorn>=0.29"]
+dev = ["pytest>=8.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"

@@ -1,0 +1,57 @@
+# Oncoscope v0 configuration (T-0.1)
+#
+# Task: screening mammography–shaped binary cancer detection.
+# Default dataset target is RSNA Screening Mammography (~2% prevalence,
+# pathology outcome labels, two sites). The synthetic phantom dataset
+# ships in-repo so the whole pipeline runs before any real data lands.
+
+task:
+  name: screening-cancer-detection
+  modality: mammography
+  dataset: rsna-screening-mammography   # or: phantom (in-repo smoke data)
+  prevalence: 0.02
+  operating_context: screening          # screening | diagnostic | triage
+
+# Primary metric fixed at scoping time (T-0.1). All promotion decisions
+# key off this; changing it is a governance event, not a config edit.
+primary_metric:
+  name: sensitivity_at_specificity
+  specificity: 0.96
+  secondary:
+    - partial_auc_spec_090_100
+    - ece_adaptive
+    - risk_coverage_auc
+
+splits:
+  # Patient- and site-grouped ALWAYS (axiom A9). Persisted, versioned, hashed.
+  path: data/splits/splits_v1.json
+  train: 0.60
+  calibration: 0.10       # disjoint calibration split (T-1.3)
+  threshold: 0.10         # disjoint threshold-fitting split (T-1.3)
+  slice_discovery: 0.05   # disjoint slice-discovery split (T-1.3)
+  test: 0.15              # hash-sealed; access via the scoring service only
+
+sealed_test:
+  manifest: data/splits/sealed_test_manifest.json
+  query_budget: 50        # pre-registered budget of full-metric queries
+  access_log: ledger/sealed_access.jsonl
+
+detector:
+  # Detector proposes at high sensitivity / low precision (axiom A2).
+  score_threshold: 0.10
+  max_candidates: 16
+
+verification:
+  self_consistency_reads: 5
+  min_reproduced: 3        # keep findings reproduced in >=k/N samples
+  escalate_on_disagreement: true
+
+abstention:
+  deferral_band: [0.35, 0.65]   # scores in-band defer to human review
+  max_deferral_rate: 0.15
+
+orchestrator:
+  # D3: hosted LLM acceptable for public data — text and handles only.
+  # The LLM NEVER receives pixels (axiom A3); tools pass opaque handles.
+  model: claude-opus-5
+  max_turns: 24
