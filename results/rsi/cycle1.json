@@ -1,0 +1,33 @@
+{
+ "cycle": 1,
+ "champion": "finetune_v4_head",
+ "candidate": "dfr_site_x_density",
+ "gate_passed": false,
+ "checks": [
+  {
+   "name": "primary_metric_non_inferiority",
+   "passed": false,
+   "detail": "paired delta -0.120 (CI low -0.166) >= -0.02"
+  },
+  {
+   "name": "subgroup_worst_slice_floor",
+   "passed": false,
+   "detail": "worst slice age_band=50-59: 0.190 vs overall 0.283"
+  },
+  {
+   "name": "calibration_ece",
+   "passed": false,
+   "detail": "ECE 0.0735 <= 0.05"
+  },
+  {
+   "name": "negative_flip_rate",
+   "passed": false,
+   "detail": "0.3019 <= 0.02"
+  },
+  {
+   "name": "determinism_double_run",
+   "passed": true,
+   "detail": "agreement 1.0000 >= 1.0"
+  }
+ ]
+}
