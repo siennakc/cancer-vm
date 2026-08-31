@@ -36,9 +36,10 @@ does not survive this shift** (ECE 0.49): refit per site before quoting probabil
 ³ Hash-sealed, query-budgeted internal split (n=1,002), defined against
 `splits_v1`. **v3/v4 are disqualified here, exactly as v2 is on the public
 benchmark**: `splits_v2` re-splits with a new seed, so 381 of the 499 sealed
-patients now sit in a v3/v4 fitting split. No query has been spent on them and
-none should be — the seal verifies membership, not split provenance, so this
-one is honour-system until that check exists.
+patients now sit in a v3/v4 fitting split. No query has been spent on them,
+and since 2026-08-31 the scorer enforces this in code: `SealedTestSet.score`
+requires the candidate's fit manifest (or an explicit `external=True`) and
+refuses any manifest that puts a sealed patient in a fitting split.
 ⁴ v2 trained on 202 of the official test split's 349 patients (our patient-grouped
 splits predate the quarantine) — its internal/MIAS numbers stand, its official-split
 numbers would be leakage and are not reported.
@@ -92,6 +93,13 @@ prob = head.predict_proba(enc.embed_batch([pixels]))    # pixels: float [0,1] Hx
   women twice under different patient IDs with byte-identical DICOMs — six twin
   groups merged for splitting, four label-conflicting pairs dropped entirely.
   UID checks cannot see these; content hashing can (`duplicates_audit_v1.json`).
+- **Label gold is any-malignant** (revised 2026-08-31): the CSVs carry one row
+  per abnormality, and first-wins dedup had labeled 11 multi-finding images
+  benign despite a biopsy-proven malignant row (4 inside the public benchmark,
+  2 in the sealed set). `scripts/backfill_labels_v1.py` fixed the committed
+  table; numbers published before the revision are annotated stale in their
+  `results/*.json` and will be re-scored — the old error *depressed* AUROC,
+  so re-scoring can only help.
 - One DICOM decoder for training, serving, and eval (`data/dicom_canonical.py`):
   MONOCHROME1, rescale, VOI LUT, pixel spacing handled once.
 

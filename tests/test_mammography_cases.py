@@ -225,3 +225,55 @@ def test_shipped_csv_headers_still_carry_a_known_density_spelling():
         with path.open(newline="") as fh:
             fields = next(csv.reader(fh))
         assert any(k in fields for k in _DENSITY_KEYS), f"{path.name}: no density column"
+
+
+# --- any-malignant labels (regression) ------------------------------------
+#
+# The CSVs carry one row per ABNORMALITY. First-wins dedup labeled an image
+# benign whenever its first listed finding was benign, even with a
+# biopsy-proven malignant row later — 11 real images. Image-level gold is
+# any-malignant.
+
+def test_multi_abnormality_image_is_any_malignant(tmp_path):
+    meta, raw = tmp_path / "metadata", tmp_path / "raw"
+    meta.mkdir()
+    uid = "uid-multi-1"
+    tcia_pid = "Mass-Training_P_00020_LEFT_CC"
+    path = f"{tcia_pid}/1.2.3.study/{uid}/000000.dcm"
+    # benign row FIRST, malignant row second — first-wins would say benign
+    (meta / "mass_case_description_train_set.csv").write_text(
+        CSV_HEADER
+        + f"P_00020,3,LEFT,CC,1,mass,IRREGULAR,SPICULATED,4,BENIGN,4,{path},{path},{path}\n"
+        + f"P_00020,3,LEFT,CC,2,mass,IRREGULAR,SPICULATED,5,MALIGNANT,4,{path},{path},{path}\n"
+    )
+    series = raw / "CBIS" / uid
+    series.mkdir(parents=True)
+    (series / "000000.dcm").write_bytes(b"stub")
+    manifest = tmp_path / "manifest.jsonl"
+    manifest.write_text(json.dumps({"series_uid": uid, "relpath": f"CBIS/{uid}"}) + "\n")
+
+    cases = build_cbis_cases(meta, manifest, raw)
+    assert len(cases) == 1, "two abnormality rows must stay one image case"
+    assert cases[0].label == 1, "any-malignant: a malignant row anywhere wins"
+
+
+def test_all_benign_rows_stay_benign(tmp_path):
+    meta, raw = tmp_path / "metadata", tmp_path / "raw"
+    meta.mkdir()
+    uid = "uid-multi-2"
+    tcia_pid = "Mass-Training_P_00021_LEFT_CC"
+    path = f"{tcia_pid}/1.2.3.study/{uid}/000000.dcm"
+    (meta / "mass_case_description_train_set.csv").write_text(
+        CSV_HEADER
+        + f"P_00021,3,LEFT,CC,1,mass,OVAL,CIRCUMSCRIBED,2,BENIGN,4,{path},{path},{path}\n"
+        + f"P_00021,3,LEFT,CC,2,mass,OVAL,CIRCUMSCRIBED,2,BENIGN_WITHOUT_CALLBACK,4,{path},{path},{path}\n"
+    )
+    series = raw / "CBIS" / uid
+    series.mkdir(parents=True)
+    (series / "000000.dcm").write_bytes(b"stub")
+    manifest = tmp_path / "manifest.jsonl"
+    manifest.write_text(json.dumps({"series_uid": uid, "relpath": f"CBIS/{uid}"}) + "\n")
+
+    cases = build_cbis_cases(meta, manifest, raw)
+    assert len(cases) == 1
+    assert cases[0].label == 0

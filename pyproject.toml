@@ -19,7 +19,9 @@ dependencies = [
 
 [project.optional-dependencies]
 agent = ["claude-agent-sdk>=0.1.0"]
-harness = ["oncoharness @ git+https://github.com/siennakc/Onco-Harness"]
+# Pinned to a commit so "which harness produced this number" has one answer.
+# Bump deliberately; results files record the ref they ran against.
+harness = ["oncoharness @ git+https://github.com/siennakc/Onco-Harness@0293cd025ad5295876376daaea90189dcada7957"]
 serving = ["fastapi>=0.110", "uvicorn>=0.29"]
 dev = ["pytest>=8.0"]
 

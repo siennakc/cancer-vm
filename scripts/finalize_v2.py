@@ -87,7 +87,8 @@ sealed = SealedTestSet("data/processed/sealed_test_v1.json",
 order = np.argsort(np.array(te["cid"]))
 sm = sealed.score(sorted(te["cid"]), te["y"][order],
                   head.predict_proba(te["X"])[order],
-                  caller="finetune_v2b_fc_import_fixedstats")
+                  caller="finetune_v2b_fc_import_fixedstats",
+                  fit_manifest="data/processed/splits_v1.json")
 print("SEALED TEST:", json.dumps(sm))
 metrics["sealed_test"] = sm
 

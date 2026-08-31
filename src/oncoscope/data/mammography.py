@@ -27,7 +27,7 @@ import csv
 import hashlib
 import json
 import re
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 
 # BENIGN_WITHOUT_CALLBACK is benign tissue that was not even recalled — it is a
@@ -114,7 +114,13 @@ def build_cbis_cases(metadata_dir: Path | str, manifest_path: Path | str,
     metadata_dir, raw_root = Path(metadata_dir), Path(raw_root)
     manifest = _load_manifest(manifest_path)
     cases: list[MammoCase] = []
-    seen: set[str] = set()
+    # case_id -> index into ``cases``. The CSVs carry one row per ABNORMALITY,
+    # so an image with several findings has several rows. Descriptor fields
+    # keep first-wins, but the label is any-malignant: an image containing one
+    # benign and one biopsy-proven malignant lesion is a malignant image.
+    # (First-wins labeling marked 11 such images benign — depressing measured
+    # AUROC, but wrong gold either way.)
+    seen: dict[str, int] = {}
 
     for csv_name in (
         "mass_case_description_train_set.csv",
@@ -151,8 +157,15 @@ def build_cbis_cases(metadata_dir: Path | str, manifest_path: Path | str,
                 # two masses in one view must not become two duplicate cases.
                 case_id = f"ddsm-{series_uid}"
                 if case_id in seen:
+                    idx = seen[case_id]
+                    if label == 1 and cases[idx].label == 0:
+                        cases[idx] = replace(cases[idx], label=1)
+                    if cases[idx].density_band is None:
+                        band = _read_density_band(row)
+                        if band is not None:
+                            cases[idx] = replace(cases[idx], density_band=band)
                     continue
-                seen.add(case_id)
+                seen[case_id] = len(cases)
 
                 density = _read_density_band(row)
 

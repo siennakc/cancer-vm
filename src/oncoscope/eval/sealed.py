@@ -23,16 +23,25 @@ class QueryBudgetExhausted(RuntimeError):
     pass
 
 
+class SealedProvenanceError(RuntimeError):
+    """The candidate's fitting data touches the sealed patients."""
+
+
+FITTING_SPLITS = ("train", "calibration", "threshold", "slice_discovery")
+
+
 class SealedTestSet:
     def __init__(
         self,
         manifest_path: str | Path,
         access_log_path: str | Path,
         query_budget: int = 50,
+        case_table_path: str | Path = "data/processed/cases_v1.jsonl",
     ) -> None:
         self.manifest_path = Path(manifest_path)
         self.access_log_path = Path(access_log_path)
         self.query_budget = query_budget
+        self.case_table_path = Path(case_table_path)
 
     # -- sealing ---------------------------------------------------------
     def seal(self, case_ids: list[str], version: str = "v1") -> str:
@@ -53,6 +62,48 @@ class SealedTestSet:
         if sha != raw["sha256"]:
             raise ValueError(
                 "case set does not match the sealed manifest — refusing to score"
+            )
+
+    def verify_provenance(self, fit_manifest_path: str | Path) -> None:
+        """Refuse to score a model whose fitting splits touch sealed patients.
+
+        Membership hashing alone cannot catch this: after a re-split under a
+        new seed (splits_v1 -> splits_v2), 381 of the 499 v1-sealed patients
+        landed in v2 fitting splits, so a v3/v4 model could be scored here and
+        pass every membership check while having trained on 76% of the sealed
+        set. This check derives the sealed PATIENTS from the case table and
+        rejects any fit manifest that assigns one of them to a fitting split.
+        """
+        from ..data.splits import load_manifest  # hash-verifies the manifest
+
+        sealed_ids = set(json.loads(self.manifest_path.read_text())["case_ids"])
+        if not self.case_table_path.exists():
+            raise SealedProvenanceError(
+                f"case table {self.case_table_path} not found — cannot map sealed "
+                "cases to patients, refusing to score"
+            )
+        patients: set[str] = set()
+        unmapped = set(sealed_ids)
+        with self.case_table_path.open() as fh:
+            for line in fh:
+                row = json.loads(line)
+                if row["case_id"] in sealed_ids:
+                    patients.add(f"{row['site']}/{row['patient_id']}")
+                    unmapped.discard(row["case_id"])
+        if unmapped:
+            raise SealedProvenanceError(
+                f"{len(unmapped)} sealed case(s) missing from the case table "
+                f"(e.g. {sorted(unmapped)[:3]}) — refusing to score"
+            )
+        assignment = load_manifest(fit_manifest_path).assignment
+        contaminated = sorted(
+            p for p in patients if assignment.get(p) in FITTING_SPLITS
+        )
+        if contaminated:
+            raise SealedProvenanceError(
+                f"{len(contaminated)} of {len(patients)} sealed patients sit in a "
+                f"fitting split of {fit_manifest_path} (e.g. {contaminated[:3]}). "
+                "A model fit under that manifest is disqualified on this sealed set."
             )
 
     # -- accounting ------------------------------------------------------
@@ -84,8 +135,24 @@ class SealedTestSet:
         caller: str,
         specificity: float = 0.96,
         gold_version: str = "v1",
+        fit_manifest: str | Path | None = None,
+        external: bool = False,
     ) -> dict[str, float]:
-        """Aggregate metrics only. One budget unit per call. Every call logged."""
+        """Aggregate metrics only. One budget unit per call. Every call logged.
+
+        Provenance is not optional: pass ``fit_manifest`` (the split manifest
+        the candidate was fit under — checked against the sealed patients), or
+        declare ``external=True`` for a benchmark whose cases cannot appear in
+        any internal fitting split (e.g. MIAS). Silence is not an option.
+        """
+        if not external:
+            if fit_manifest is None:
+                raise SealedProvenanceError(
+                    "declare the candidate's fit manifest (fit_manifest=...) or "
+                    "mark the benchmark external=True — scoring without split "
+                    "provenance is how a sealed set gets quietly burned"
+                )
+            self.verify_provenance(fit_manifest)
         self.verify(case_ids)
         if self._queries_spent() >= self.query_budget:
             raise QueryBudgetExhausted(

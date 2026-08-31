@@ -43,8 +43,10 @@ def main() -> None:
         scorer.seal(sorted(r["opaque_id"] for r in rows), version="mias_v1")
     ids_sorted = sorted(r["opaque_id"] for r in rows)
     order = np.argsort([r["opaque_id"] for r in rows])
+    # MIAS is an external cohort: its cases cannot appear in any internal
+    # fitting split, so there is no fit manifest to check against.
     headline = scorer.score(ids_sorted, y[order], scores[order],
-                            caller=f"bench:{args.model}")
+                            caller=f"bench:{args.model}", external=True)
 
     a = clustered_bootstrap_ci(y, scores, pids, auroc, iterations=2000)
     s = clustered_bootstrap_ci(y, scores, pids, sensitivity_at_specificity, iterations=2000)

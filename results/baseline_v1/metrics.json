@@ -85,5 +85,8 @@
    "n_cases": 1002.0,
    "queries_remaining": 49.0
   }
+ },
+ "notes": {
+  "label_gold_revision": "gold-label revision 2026-08-31: build_cbis_cases deduplicated per-abnormality CSV rows first-wins, labeling 11 multi-finding images benign despite a biopsy-proven malignant row. cases_v1.jsonl now carries any-malignant labels (scripts/backfill_labels_v1.py). Numbers in this file were computed against the OLD gold and are stale by 2 affected case(s) until re-scored; the error direction (malignant scored as benign) depressed measured AUROC."
  }
 }

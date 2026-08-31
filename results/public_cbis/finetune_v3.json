@@ -104,6 +104,7 @@
  "notes": {
   "density_grid_coverage": "density=* slices cover mass cases only (n=386 of 709): build_cbis_cases read the mass CSVs' 'breast_density' spelling but not the calc CSVs' 'breast density', so every calcification case carried density_band=null when this grid was computed. The parser and cases_v1.jsonl are fixed (scripts/backfill_density_v1.py); these density rows are stale until eval_public_cbis.py is re-run. abnormality=* and view=* slices are unaffected and cover all 709.",
   "density_slice_n_total": 386,
-  "benchmark_n": 709
+  "benchmark_n": 709,
+  "label_gold_revision": "gold-label revision 2026-08-31: build_cbis_cases deduplicated per-abnormality CSV rows first-wins, labeling 11 multi-finding images benign despite a biopsy-proven malignant row. cases_v1.jsonl now carries any-malignant labels (scripts/backfill_labels_v1.py). Numbers in this file were computed against the OLD gold and are stale by 4 affected case(s) until re-scored; the error direction (malignant scored as benign) depressed measured AUROC."
  }
 }

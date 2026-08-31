@@ -147,6 +147,7 @@ def main() -> None:
         y_true=te["y"][order],
         scores=merged.predict_proba(te["X"])[order],
         caller=ARGS.caller,
+        fit_manifest="data/processed/splits_v1.json",
     )
     print(f"[train] SEALED TEST: {json.dumps(sealed_metrics)}", flush=True)
     metrics["sealed_test"] = sealed_metrics
