@@ -37,13 +37,30 @@ def main():
     out_dir = Path("runs/c16/scores"); out_dir.mkdir(parents=True, exist_ok=True)
     scratch = Path("runs/c16/slides"); scratch.mkdir(parents=True, exist_ok=True)
 
-    for name in names:
+    import subprocess
+    def prefetch(nm):
+        if nm and not (out_dir / f"{nm}.json").exists() and not (scratch / f"{nm}.tif").exists():
+            return subprocess.Popen(["curl", "-sL", "--retry", "5", "-C", "-", "-o",
+                                     str(scratch / f"{nm}.tif.part"),
+                                     f"https://camelyon-dataset.s3.us-west-2.amazonaws.com/CAMELYON16/images/{nm}.tif"])
+        return None
+
+    pf = None
+    for idx, name in enumerate(names):
         out = out_dir / f"{name}.json"
         if out.exists():
             print(f"[c16] {name}: cached", flush=True); continue
         t0 = time.time()
         slide_path = scratch / f"{name}.tif"
+        part = scratch / f"{name}.tif.part"
+        if pf is not None:
+            pf.wait()
+            pf = None
+        if part.exists() and not slide_path.exists():
+            part.rename(slide_path)
         fetch(f"images/{name}.tif", slide_path)
+        nxt = next((n for n in names[idx + 1:] if not (out_dir / f"{n}.json").exists()), None)
+        pf = prefetch(nxt)
         t_dl = time.time() - t0
         slide = open_slide(slide_path)
         level, scale = pick_level(slide)
@@ -64,6 +81,13 @@ def main():
         if not args.keep:
             slide_path.unlink(missing_ok=True)
         p = np.concatenate(probs) if probs else np.zeros(1)
+        # per-tile evidence for post-hoc calibration / noisy-OR / TTA re-verify:
+        # full prob vector + coords of the top-200 tiles (216 KB/slide)
+        top_idx = np.argsort(p)[::-1][:200]
+        np.savez_compressed(out_dir / f"{name}.npz", probs=p.astype(np.float16),
+                            top_idx=top_idx.astype(np.int32),
+                            top_coords=np.array([coords[j] for j in top_idx], np.int32),
+                            level=level, scale=scale)
         p_sorted = np.sort(p)[::-1]
         rec = {"slide": name, "n_tiles": int(len(p)), "level": level,
                "max": float(p_sorted[0]),
