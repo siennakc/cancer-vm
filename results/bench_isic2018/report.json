@@ -1,0 +1,38 @@
+{
+ "benchmark": "ISIC 2018 Task 3 (official test, public GT)",
+ "n": 1512,
+ "balanced_multiclass_accuracy": 0.753,
+ "per_class": {
+  "MEL": {
+   "n": 171,
+   "recall": 0.6491228070175439
+  },
+  "NV": {
+   "n": 909,
+   "recall": 0.9372937293729373
+  },
+  "BCC": {
+   "n": 93,
+   "recall": 0.8279569892473119
+  },
+  "AKIEC": {
+   "n": 43,
+   "recall": 0.6744186046511628
+  },
+  "BKL": {
+   "n": 217,
+   "recall": 0.8433179723502304
+  },
+  "DF": {
+   "n": 44,
+   "recall": 0.6818181818181818
+  },
+  "VASC": {
+   "n": 35,
+   "recall": 0.6571428571428571
+  }
+ },
+ "arch": "tf_efficientnet_b3.ns_jft_in1k",
+ "val_bma": 0.8610866004358606,
+ "tta": "hflip"
+}
