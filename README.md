@@ -86,6 +86,9 @@ To use the LLM adjudicator instead of the rule-based one, install the agent extr
 
 ## Status
 
-Phases 0–4 are scaffolded and tested end-to-end on phantoms (31 tests).
-Real-data ingestion (RSNA mammography), the flywheel (Phase 5), and hardening
-(Phase 6) are next; per-task status lives in [TASKSHEET.md](TASKSHEET.md#part-8--build-plan).
+**The harness (Phases 0–4) is complete** and tested end-to-end on phantoms
+(45 tests): full toolbelt, TTA + zoom + symmetric FP/FN verification,
+Mondrian conformal deferral, image-ablated CI control, and the T-4.5 ablation
+runner (`python -m oncoscope.eval.ablation`). Real-data ingestion (RSNA
+mammography), the flywheel (Phase 5), and hardening (Phase 6) come next;
+per-task status lives in [TASKSHEET.md](TASKSHEET.md#part-8--build-plan).

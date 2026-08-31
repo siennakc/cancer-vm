@@ -128,11 +128,11 @@ frozen-FM encoder + light head + Claude Agent SDK harness; local-first for pixel
 - **T-3.3** Gate rules in a protected path the harness's service account cannot write. ✅ `gates/` + CI immutability test
 
 ### Phase 4 — The harness
-- **T-4.1** Claude Agent SDK in-process MCP server; tools: `describe_store`, `run_detector`, `crop_region`, `measure`, `retrieve_similar`, `lookup_criteria`, `submit_review` (+ `segment`, `compare_prior`, `run_eval_gate` pending); handle-passing artifact store; LLM never sees pixels; built-ins stripped; allowlist enforced in our code. ✅ `harness/tools.py`, `harness/store.py`, `harness/agent.py`
-- **T-4.2** Deterministic outer state machine (ingest → preflight QC → screen → detect → verify → aggregate → report); LLM only at decision nodes. ✅ `harness/state_machine.py`
-- **T-4.3** Inference stack v1: detector-first grounding + TTA self-consistency + structured extraction with abstention + deferral policy. ✅ (zoom loop, cross-model FP/FN verification, conformal sets pending)
-- **T-4.4** Full trace logging; evidence ledger; image-ablated control wired into CI. ◻ partial (ledger ✅; OTel/MLflow + image-ablated CI pending)
-- **T-4.5** Measure: harness vs detector-alone vs VLM-alone on the locked set. ◻ (RuleBasedAdjudicator is the detector-alone arm)
+- **T-4.1** Full toolbelt: `describe_store`, `run_detector` (primary + blindspot profiles), `crop_region`, `segment`, `measure`, `compare_prior` (registration + QC inside the tool; refuses on failed correspondence), `retrieve_similar`, `lookup_criteria`, `run_eval_gate`, `submit_review`; handle-passing artifact store; Claude Agent SDK in-process MCP server with built-ins stripped; deny-by-default allowlist enforced in our code (SDK PreToolUse hooks are a belt-and-suspenders add-on, pending SDK API stabilization). ✅
+- **T-4.2** Deterministic outer state machine (ingest → preflight QC → detect → TTA verify → zoom re-verify → FP/FN hunt → aggregate → adjudicate → conformal policy → report); LLM only at the adjudication node. ✅ `harness/state_machine.py`
+- **T-4.3** Inference stack v1: detector-first grounding + TTA self-consistency + zoom crop-and-re-detect (A1 clean-room look) + symmetric FP-hunter (named-alternative vetoes) / FN-hunter (second detector family over unexamined regions) + Mondrian conformal deferral + structured extraction with abstention. ✅ (cross-*model-family* verification upgrades with real specialist models)
+- **T-4.4** Evidence ledger (hash-chained) ✅; image-ablated control wired into CI ✅ (`test_image_ablated_control`); OTel/MLflow trace export pending (with real-data phase).
+- **T-4.5** Ablation runner: harness vs detector-alone on a shared case set (`eval/ablation.py`); VLM-alone arm joins when an LLM adjudicator is attached. ✅
 
 ### Phase 5 — The flywheel
 - **T-5.1** Review queue (AL score × disagreement × cleanlab × novelty) → Label Studio; typed feedback schema; ~20% random audit. ◻

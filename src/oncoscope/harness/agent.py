@@ -41,10 +41,16 @@ Hard rules you must never break:
 
 Return ONLY the structured adjudication object."""
 
+# Read-only evidence-gathering tools only. Deliberately absent: submit_review
+# (deferral is the state machine's outcome, not a side effect the adjudicator
+# can trigger mid-thought) and run_eval_gate (the gate belongs to the
+# improvement loop; the adjudicator must not query its own promotion machinery).
 _ALLOWED_TOOLS = (
     "describe_store",
     "crop_region",
+    "segment",
     "measure",
+    "compare_prior",
     "retrieve_similar",
     "lookup_criteria",
 )
@@ -94,7 +100,9 @@ class LLMAdjudicator:
         schemas: dict[str, dict] = {
             "describe_store": {},
             "crop_region": {"image_handle": str, "box": list},
+            "segment": {"image_handle": str, "box": list, "pixel_spacing_mm": list},
             "measure": {"image_handle": str, "box": list, "pixel_spacing_mm": list},
+            "compare_prior": {"current_handle": str, "prior_handle": str, "box": list},
             "retrieve_similar": {"crop_handle": str, "k": int},
             "lookup_criteria": {"topic": str},
         }
