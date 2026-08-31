@@ -1,116 +1,125 @@
-# Oncoscope
+# Oncoscope — an open mammography malignancy model
 
-> **The harness now lives in its own repo:
-> [siennakc/Onco-Harness](https://github.com/siennakc/Onco-Harness)** (package
-> `oncoharness`; extracted at `4ce701d`). This repo is the **model & data
-> lane**: ingestion, trained encoders, sealed internal test, external
-> benchmark. Serving plugs the harness back in via the `harness` extra.
+A breast-cancer screening model you can train from scratch on a laptop:
+fine-tuned ResNet-50 encoder + calibrated logistic head, trained on two public
+mammography collections (126 GB, credential-free), evaluated on the **official
+CBIS-DDSM test split** and externally validated on MIAS. Every number below is
+reproducible from a clean clone with the commands in this README.
 
-An LLM harness that orchestrates vision models to detect cancer in medical images —
-wrapped in a gated self-improvement loop designed to get measurably better every
-cycle **without fooling itself**.
+> **Not a medical device.** Research and education only. No output of this
+> model may be used for diagnosis, screening, or treatment decisions.
 
-Built from the [Oncoscope Build Tasksheet](TASKSHEET.md) (repo copy of the research
-synthesis; task IDs like `T-4.2` reference it). Threat model and PHI boundary:
-[THREAT_MODEL.md](THREAT_MODEL.md).
+The agent harness that orchestrates this model (state machine, evidence
+ledger, eval gates) lives in its own repo: **Onco-Harness**.
 
-## The architecture in one paragraph
+## Results
 
-A **deterministic state machine** (`ingest → preflight QC → screen → detect →
-verify → aggregate → adjudicate → report`) drives every case. Specialist
-**detectors propose** candidate findings at high sensitivity; the **LLM adjudicates**
-at exactly one decision node — it plans, weighs verified evidence, and decides
-recall / no-recall / defer, but it **never sees pixels and never authors a number**.
-Images live in a handle-passing **artifact store**; every tool call and claim lands in
-an append-only, hash-chained **evidence ledger**; every promotion must pass a
-conjunctive **eval gate** whose rules live in a path the harness cannot write.
+Image-level malignant-vs-benign, AUROC with patient-clustered 95% CIs.
 
+| model | public benchmark: CBIS-DDSM official test¹ | external: MIAS² | internal sealed test³ |
+|---|---|---|---|
+| v1 frozen IN1K + refit head | 0.628 [0.577–0.680] | 0.512 (chance) | 0.707 |
+| v2 fine-tuned (`weights-v2`) | *disqualified⁴* | 0.733 [0.65–0.81] | **0.8165** |
+| **v3 fine-tuned, quarantined (`weights-v3`)** | **0.742 [0.696–0.786]** | 0.664 [0.58–0.74] | — |
+
+¹ 709 images / 349 patients from the official mass+calc test CSVs; published
+whole-image results on this split run ≈0.75–0.88 with larger inputs and heavy
+pretraining — v3 sits just under that range after 22 min of laptop training.
+² 322 UK film-screen images (1994), never seen in any fitting stage. **Calibration
+does not survive this shift** (ECE 0.49): refit per site before quoting probabilities.
+³ Hash-sealed, query-budgeted internal split (n=1,002). v3 has not spent a query.
+⁴ v2 trained on 202 of the official test split's 349 patients (our patient-grouped
+splits predate the quarantine) — its internal/MIAS numbers stand, its official-split
+numbers would be leakage and are not reported.
+
+Subgroup slices (BenchX-style; v3, official split): mass 0.754 / calc 0.736 ·
+density a 0.836, b 0.795, **c 0.623**, d 0.826 · CC 0.768 / MLO 0.720.
+Density-c breasts are the weak slice; `results/public_cbis/*.json` has the grid.
+
+## Get the model
+
+GitHub releases (sha256 in notes): [`weights-v3`](../../releases/tag/weights-v3)
+(benchmark-eligible) · [`weights-v2`](../../releases/tag/weights-v2) (best internal).
+Each ships `best_model.pt` + `checkpoint.pt` (full optimizer state — resume
+training with `--resume`). Calibrated heads are committed in `results/*/head.json`.
+
+```python
+import torch, numpy as np, sys; sys.path.insert(0, "src")
+from oncoscope.models.encoder import FrozenEncoder
+from oncoscope.models.head import LogisticHead
+
+enc = FrozenEncoder(tag="v3", weights_path="best_model.pt", normalize=False,
+                    mean=(0.449,)*3, std=(0.226,)*3)   # grayscale train stats
+head = LogisticHead.load("results/finetune_v3/head.json")
+prob = head.predict_proba(enc.embed_batch([pixels]))    # pixels: float [0,1] HxW
 ```
-                     ┌──────────────────────────────────────────────┐
-                     │        deterministic state machine           │
-  DICOM ──canonical──▶  QC ─▶ detect ─▶ TTA verify ─▶ aggregate     │
-                     │                                   │          │
-                     │             ┌─────────────────────▼────────┐ │
-   artifact store ◀──┼── tools ◀───│  LLM adjudication node       │ │
-   (pixels, handles) │  (ledgered) │  (text + handles only)       │ │
-                     │             └─────────────────────┬────────┘ │
-                     │                          report / defer      │
-                     └──────────────────────────────────┬───────────┘
-                                                        ▼
-                        sealed test set ──▶ conjunctive eval gate (gates/)
+
+## How it was trained
+
+**Data — two public TCIA collections, no credentials** (`DATA_LICENSES.md`):
+
+| site | collection | images used | labels |
+|---|---|---|---|
+| `ddsm` | CBIS-DDSM (US, film→digital) | 3,093 full mammograms | biopsy-proven pathology |
+| `cmmd` | CMMD (China, FFDM) | 3,728 | biopsy-proven, per breast |
+
+- `scripts/fetch_cmmd.py` / `fetch_cbis.py` download via the public NBIA API,
+  SHA-256 per series into append-only manifests; failures recorded and retried,
+  never silently dropped.
+- **Byte-level duplicate audit** (`content_audit`): both collections enroll some
+  women twice under different patient IDs with byte-identical DICOMs — six twin
+  groups merged for splitting, four label-conflicting pairs dropped entirely.
+  UID checks cannot see these; content hashing can (`duplicates_audit_v1.json`).
+- One DICOM decoder for training, serving, and eval (`data/dicom_canonical.py`):
+  MONOCHROME1, rescale, VOI LUT, pixel spacing handled once.
+
+**Splits — patient-grouped always** (`data/splits.py`, axiom A9): train /
+calibration / threshold / slice_discovery / test, hash-locked. `splits_v2`
+additionally quarantines all 349 official-test patients into `public_bench`,
+untouchable by any fitting stage — that quarantine is what makes the v3
+benchmark numbers legitimate.
+
+**Recipe** (`scripts/finetune_encoder.py`, Apple M4 Max, MPS, ~22 min):
+ResNet-50 from IN1K → breast-crop + 448 letterbox render cache → class-balanced
+sampling → hflip / ±10° rotation / 0.9–1.1 scale / intensity jitter →
+AdamW 1e-4, cosine, 14 epochs, batch 16 → epoch selection on calibration AUROC.
+
+**Calibration** (`models/head.py`, axiom A10): the network's fc imported as a
+logistic head → analytic prior-correction (balanced 0.5 → cohort prevalence) →
+temperature scaling on the disjoint calibration split → operating threshold at
+≥96% specificity chosen on the disjoint threshold split. Both cohorts are
+biopsy-enriched (~58% malignant vs ~0.5% screening reality): never quote PPV
+from these test sets, and re-shift the prior before any deployment claim.
+
+**Evaluation discipline:** the internal test set is hash-sealed with a
+50-query budget and an access log (4 spent, 2 on stacks later voided — the log
+keeps us honest). Public-benchmark numbers come only from quarantined models.
+
+## Reproduce everything
+
+```sh
+python3.12 -m venv .venv && .venv/bin/pip install -e '.[dev]' pandas openpyxl
+.venv/bin/python scripts/fetch_cmmd.py        # 23 GB
+.venv/bin/python scripts/fetch_cbis.py        # 103 GB
+.venv/bin/python scripts/build_dataset.py     # case table + audit + splits
+.venv/bin/python scripts/make_splits_v2.py    # official-test quarantine
+.venv/bin/python scripts/render_cache.py      # 448px training cache (2.6 GB)
+.venv/bin/python scripts/finetune_encoder.py --splits data/processed/splits_v2.json --run runs/finetune_v3
+.venv/bin/python scripts/cache_embeddings.py --tag resnet50_ft_v3_448_raw --weights runs/finetune_v3/best_model.pt --raw --gray-stats
+.venv/bin/python scripts/refit_heads_v3.py    # calibrated heads
+.venv/bin/python scripts/eval_public_cbis.py --tag resnet50_ft_v3_448_raw --head runs/finetune_v3_head/head.json --name finetune_v3
+.venv/bin/python -m pytest                    # 59 tests, no GPU needed
 ```
 
 ## Layout
 
-| Path | Contents | Tasksheet |
-|---|---|---|
-| `src/oncoscope/data/` | Canonical DICOM loader, allowlist de-ID, grouped splits, phantom generator | T-1.1, T-1.2, T-3.2 |
-| `src/oncoscope/models/` | DoG candidate detector, embedding features, calibrated head + DFR refit | T-2.1, Part 4 |
-| `src/oncoscope/eval/` | Metrics, leakage audit, sealed test set, PASS/FAIL gate | T-1.3, T-1.4, T-3.1 |
-| `src/oncoscope/harness/` | Artifact store, evidence ledger, toolbelt, state machine, Claude agent | T-4.1 – T-4.4 |
-| `src/oncoscope/serving/` | FastAPI wrapper (same preprocessing as training) | T-2.3 |
-| `gates/` | Gate rules — **protected path**, never writable by the harness | T-3.3 |
-| `tests/` | Golden DICOM fixtures, leakage, metrics, gate, ledger, phantom end-to-end | T-3.2 |
+| path | contents |
+|---|---|
+| `src/oncoscope/data/` | TCIA client, DICOM canonicalizer, case tables, audits, grouped splits |
+| `src/oncoscope/models/` | encoder (frozen/fine-tuned), calibrated head, DFR refit |
+| `src/oncoscope/eval/` | metrics, sealed test set, leakage audit, gate |
+| `scripts/` | fetch → build → train → calibrate → evaluate, in order |
+| `results/` | committed metrics, cards, calibrated heads — the source of every number above |
+| `data/metadata/` | label CSVs + download manifests (images themselves are never committed) |
 
-## Quickstart
-
-```sh
-python3.12 -m venv .venv
-.venv/bin/pip install -e '.[dev]'
-.venv/bin/python -m pytest          # full suite runs in seconds, no GPU, no data
-```
-
-Run the whole pipeline on a synthetic phantom:
-
-```sh
-.venv/bin/python - <<'EOF'
-from oncoscope.data.phantom import generate_dataset
-from oncoscope.harness.ledger import EvidenceLedger
-from oncoscope.harness.state_machine import HarnessPipeline
-from oncoscope.harness.store import ArtifactStore
-from oncoscope.harness.tools import Toolbelt
-
-case = next(c for c in generate_dataset() if c.label == 1)
-pipeline = HarnessPipeline(Toolbelt(ArtifactStore("runs/demo/artifacts"),
-                                    EvidenceLedger("runs/demo/ledger.jsonl")))
-report = pipeline.run_case(case.case_id, case.pixels)
-print(report.model_dump_json(indent=1))
-EOF
-```
-
-To use the LLM adjudicator instead of the rule-based one, install the agent extra
-(`pip install -e '.[agent]'`), authenticate the Anthropic SDK, and pass
-`LLMAdjudicator(toolbelt)` to `HarnessPipeline`.
-
-## Non-negotiables (see TASKSHEET.md Part 1)
-
-- The LLM never authors pixels, coordinates, or numbers (A3).
-- Splits are patient- and site-grouped, always; the leakage audit is a failing CI test (A9).
-- The sealed test set is hash-locked, query-budgeted, and access-logged (A6).
-- Abstention is a first-class output; deferral ships evidence, not a bare flag (A13).
-- The harness can never write its own gates — self-improving, never self-certifying.
-
-## Results so far
-
-| model | internal sealed test (n=1,002) | external MIAS bench (n=322) |
-|---|---|---|
-| baseline_v1 — frozen IN1K ResNet-50 | AUROC 0.707 · sens@96 0.179 | AUROC **0.504** (chance) |
-| finetune_v2 — fine-tuned encoder | AUROC **0.8165** · sens@96 0.337 | AUROC **0.733** · sens@96 0.423 |
-
-**Official CBIS-DDSM test split** (public benchmark, n=709; quarantined splits_v2
-arms — v2 is disqualified there, see `results/public_cbis/CARD.md`):
-frozen control 0.628 · **finetune_v3 0.742 [0.696–0.786]**, subgroup grids included.
-
-The external column is the honest one: the frozen baseline's internal score was
-substantially shortcut (site prevalence), and calibration does not survive the
-domain shift (v2 external ECE 0.485 — refit per site before quoting any
-probability). Details: `results/*/CARD.md`; weights: release `weights-v2`.
-
-## Status
-
-**The harness (Phases 0–4) is complete** and tested end-to-end on phantoms
-(45 tests): full toolbelt, TTA + zoom + symmetric FP/FN verification,
-Mondrian conformal deferral, image-ablated CI control, and the T-4.5 ablation
-runner (`python -m oncoscope.eval.ablation`). Real-data ingestion (RSNA
-mammography), the flywheel (Phase 5), and hardening (Phase 6) come next;
-per-task status lives in [TASKSHEET.md](TASKSHEET.md#part-8--build-plan).
+Data licences and citations: `DATA_LICENSES.md`. Task provenance: `TASKSHEET.md`.
