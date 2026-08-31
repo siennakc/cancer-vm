@@ -29,3 +29,8 @@ mlruns/
 .DS_Store
 .idea/
 .vscode/
+
+# Ingestion working files (manifests are committed once a fetch completes)
+data/metadata/*.log
+data/processed/
+data/metadata/*_series.json
