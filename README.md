@@ -123,3 +123,4 @@ python3.12 -m venv .venv && .venv/bin/pip install -e '.[dev]' pandas openpyxl
 | `data/metadata/` | label CSVs + download manifests (images themselves are never committed) |
 
 Data licences and citations: `DATA_LICENSES.md`. Task provenance: `TASKSHEET.md`.
+Full intervention-by-intervention ledger (what made it better, what didn't): `TRAINING_HISTORY.md`.
