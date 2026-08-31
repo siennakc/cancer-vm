@@ -37,9 +37,15 @@ from oncoscope.eval.metrics import (
 from oncoscope.eval.sealed import SealedTestSet
 from oncoscope.models.head import LogisticHead
 
-EMB = Path("data/embeddings/resnet50_in1k_v2_448")
-RUN = Path("runs/baseline_v1")
 SEEDS = (0, 1, 2, 3, 4)
+import argparse
+_ap = argparse.ArgumentParser()
+_ap.add_argument("--tag", default="resnet50_in1k_v2_448")
+_ap.add_argument("--run", default="baseline_v1")
+_ap.add_argument("--caller", default="baseline_v1_resnet50_5seed")
+ARGS = _ap.parse_args()
+EMB = Path("data/embeddings") / ARGS.tag
+RUN = Path("runs") / ARGS.run
 
 
 def load_split_arrays():
@@ -140,7 +146,7 @@ def main() -> None:
         case_ids=sorted(te["cid"]),
         y_true=te["y"][order],
         scores=merged.predict_proba(te["X"])[order],
-        caller="baseline_v1_resnet50_5seed",
+        caller=ARGS.caller,
     )
     print(f"[train] SEALED TEST: {json.dumps(sealed_metrics)}", flush=True)
     metrics["sealed_test"] = sealed_metrics
@@ -148,7 +154,7 @@ def main() -> None:
     merged.save(RUN / "head.json")
     (RUN / "operating_point.json").write_text(json.dumps(op, indent=1))
     (RUN / "metrics.json").write_text(json.dumps({
-        "encoder": "resnet50_in1k_v2_448", "seeds": list(SEEDS),
+        "encoder": ARGS.tag, "seeds": list(SEEDS),
         "per_seed_cal_auroc": seed_auroc,
         "prior_logit_shift": shift, "temperature": temp,
         "splits_sha256": load_manifest("data/processed/splits_v1.json").sha256,

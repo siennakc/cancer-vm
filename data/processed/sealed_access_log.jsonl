@@ -1,1 +1,4 @@
 {"ts": "2026-08-31T07:27:09.884223+00:00", "caller": "baseline_v1_resnet50_5seed", "gold_version": "v1"}
+{"ts": "2026-08-31T08:14:22.283271+00:00", "caller": "finetune_v2_resnet50_5seed", "gold_version": "v1"}
+{"ts": "2026-08-31T08:16:53.085846+00:00", "caller": "finetune_v2b_fc_import", "gold_version": "v1"}
+{"ts": "2026-08-31T08:19:56.947994+00:00", "caller": "finetune_v2b_fc_import_fixedstats", "gold_version": "v1"}

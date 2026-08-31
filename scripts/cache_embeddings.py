@@ -25,8 +25,19 @@ BATCH = 8
 
 
 def main() -> None:
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--tag", default="resnet50_in1k_v2_448")
+    ap.add_argument("--weights", default=None)
+    ap.add_argument("--raw", action="store_true", help="skip L2 normalization")
+    ap.add_argument("--gray-stats", action="store_true", help="normalize with the finetune grayscale stats")
+    args = ap.parse_args()
+
     cases = read_case_table("data/processed/cases_v1.jsonl")
-    enc = FrozenEncoder()
+    kw = {}
+    if args.gray_stats:
+        kw = {"mean": (0.449, 0.449, 0.449), "std": (0.226, 0.226, 0.226)}
+    enc = FrozenEncoder(tag=args.tag, weights_path=args.weights, normalize=not args.raw, **kw)
     out_dir = OUT / enc.tag
     out_dir.mkdir(parents=True, exist_ok=True)
 

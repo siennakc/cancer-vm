@@ -39,3 +39,4 @@ data/processed/*
 !data/processed/sealed_access_log.jsonl
 data/metadata/*_series.json
 !data/processed/duplicates_audit_v1.json
+data/cache/

@@ -61,11 +61,25 @@ def letterbox(pixels: np.ndarray, size: int) -> np.ndarray:
 
 @dataclass
 class FrozenEncoder:
-    """ResNet-50 (IMAGENET1K_V2) feature extractor. ``tag`` versions the cache."""
+    """ResNet-50 feature extractor. ``tag`` versions the embedding cache.
+
+    ``weights_path`` loads a fine-tuned checkpoint (``best_model.pt`` from
+    ``scripts/finetune_encoder.py``); the classifier head in the checkpoint is
+    training scaffolding and is dropped here — downstream always consumes
+    embeddings + the calibrated LogisticHead stack.
+    """
 
     tag: str = "resnet50_in1k_v2_448"
     input_size: int = 448
     embed_dim: int = 2048
+    weights_path: str | None = None
+    normalize: bool = True  # L2-norm suits generic frozen features; a fine-tuned
+                            # backbone's fc consumed raw GAP magnitudes — keep them
+    # Normalization stats MUST match how the weights were trained (preprocessing
+    # skew pitfall): ImageNet per-channel for stock weights; the grayscale pair
+    # (0.449, 0.226) for checkpoints from scripts/finetune_encoder.py.
+    mean: tuple = (0.485, 0.456, 0.406)
+    std: tuple = (0.229, 0.224, 0.225)
 
     def __post_init__(self) -> None:
         import torch
@@ -79,6 +93,13 @@ class FrozenEncoder:
         net = torchvision.models.resnet50(
             weights=torchvision.models.ResNet50_Weights.IMAGENET1K_V2
         )
+        if self.weights_path is not None:
+            state = torch.load(self.weights_path, map_location="cpu",
+                               weights_only=False)["model"]
+            state = {k: v for k, v in state.items() if not k.startswith("fc.")}
+            missing, unexpected = net.load_state_dict(state, strict=False)
+            assert not unexpected, f"unexpected keys: {unexpected[:3]}"
+            assert all(k.startswith("fc.") for k in missing), f"missing: {missing[:3]}"
         net.fc = torch.nn.Identity()
         self.net = net.eval().to(self.device)
         for p in self.net.parameters():
@@ -88,7 +109,9 @@ class FrozenEncoder:
         """Canonical [0,1] grayscale -> (3, S, S) ImageNet-normalized float32."""
         img = letterbox(breast_crop(pixels.astype(np.float32)), self.input_size)
         rgb = np.repeat(img[None], 3, axis=0)
-        return (rgb - _IMAGENET_MEAN[:, None, None]) / _IMAGENET_STD[:, None, None]
+        mean = np.asarray(self.mean, dtype=np.float32)[:, None, None]
+        std = np.asarray(self.std, dtype=np.float32)[:, None, None]
+        return (rgb - mean) / std
 
     def embed_batch(self, batch: list[np.ndarray]) -> np.ndarray:
         """List of canonical images -> (n, embed_dim) L2-normalized embeddings."""
@@ -96,5 +119,7 @@ class FrozenEncoder:
         x = torch.from_numpy(np.stack([self.preprocess(p) for p in batch]))
         with torch.no_grad():
             feats = self.net(x.to(self.device)).float().cpu().numpy()
+        if not self.normalize:
+            return feats
         norms = np.linalg.norm(feats, axis=1, keepdims=True)
         return feats / np.clip(norms, 1e-9, None)

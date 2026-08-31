@@ -1,0 +1,6 @@
+{
+ "threshold": 0.870333194715518,
+ "target_specificity": 0.96,
+ "threshold_split_sens": 0.3851851851851852,
+ "threshold_split_spec": 0.9612676056338029
+}
