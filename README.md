@@ -20,11 +20,12 @@ Image-level malignant-vs-benign, AUROC with patient-clustered 95% CIs.
 |---|---|---|---|
 | v1 frozen IN1K + refit head | 0.628 [0.577–0.680] | 0.512 (chance) | 0.707 |
 | v2 fine-tuned (`weights-v2`) | *disqualified⁴* | 0.733 [0.65–0.81] | **0.8165** |
-| **v3 fine-tuned, quarantined (`weights-v3`)** | **0.742 [0.696–0.786]** | 0.664 [0.58–0.74] | — |
+| v3 fine-tuned, quarantined (`weights-v3`) | 0.742 [0.696–0.786] | 0.664 [0.58–0.74] | — |
+| **v4 + high-res post-train (`weights-v4`)** | **0.771 [0.726–0.815]** | **0.736 [0.66–0.81]** | — |
 
 ¹ 709 images / 349 patients from the official mass+calc test CSVs; published
-whole-image results on this split run ≈0.75–0.88 with larger inputs and heavy
-pretraining — v3 sits just under that range after 22 min of laptop training.
+whole-image results on this split run ≈0.75–0.88 — v4 is inside that range
+after ~80 min of laptop training (v3: 22 min at 448px sat just under it).
 ² 322 UK film-screen images (1994), never seen in any fitting stage. **Calibration
 does not survive this shift** (ECE 0.49): refit per site before quoting probabilities.
 ³ Hash-sealed, query-budgeted internal split (n=1,002). v3 has not spent a query.
@@ -32,14 +33,17 @@ does not survive this shift** (ECE 0.49): refit per site before quoting probabil
 splits predate the quarantine) — its internal/MIAS numbers stand, its official-split
 numbers would be leakage and are not reported.
 
-Subgroup slices (BenchX-style; v3, official split): mass 0.754 / calc 0.736 ·
-density a 0.836, b 0.795, **c 0.623**, d 0.826 · CC 0.768 / MLO 0.720.
-Density-c breasts are the weak slice; `results/public_cbis/*.json` has the grid.
+Subgroup slices (BenchX-style; v4, official split): mass 0.748 / calc **0.803** ·
+density a 0.926, b 0.771, **c 0.629**, d 0.777 · CC 0.786 / MLO 0.757.
+The resolution bump moved calcifications most (v3: 0.736 → 0.803) — exactly the
+microcalcification-detail mechanism the literature predicts. Density-c breasts
+remain the weak slice; `results/public_cbis/*.json` has the grid.
 
 ## Get the model
 
-GitHub releases (sha256 in notes): [`weights-v3`](../../releases/tag/weights-v3)
-(benchmark-eligible) · [`weights-v2`](../../releases/tag/weights-v2) (best internal).
+GitHub releases (sha256 in notes): [`weights-v4`](../../releases/tag/weights-v4)
+(best, benchmark-eligible) · [`weights-v3`](../../releases/tag/weights-v3) ·
+[`weights-v2`](../../releases/tag/weights-v2) (best internal-only).
 Each ships `best_model.pt` + `checkpoint.pt` (full optimizer state — resume
 training with `--resume`). Calibrated heads are committed in `results/*/head.json`.
 

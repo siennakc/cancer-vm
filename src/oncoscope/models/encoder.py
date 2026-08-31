@@ -43,19 +43,24 @@ def breast_crop(pixels: np.ndarray, threshold: float = 0.02, pad: int = 16) -> n
     return crop if crop.size else pixels
 
 
-def letterbox(pixels: np.ndarray, size: int) -> np.ndarray:
-    """Aspect-preserving resize onto a size×size canvas (area interpolation)."""
+def letterbox(pixels: np.ndarray, size: int | tuple[int, int]) -> np.ndarray:
+    """Aspect-preserving resize onto an HxW canvas (area interpolation).
+
+    ``size`` may be one int (square) or (H, W) — mammograms are portrait, and
+    the literature recipe (Shen et al. 2019) uses 1152x896.
+    """
     import torch
     import torch.nn.functional as F
 
+    th, tw = (size, size) if isinstance(size, int) else size
     h, w = pixels.shape
-    scale = size / max(h, w)
+    scale = min(th / h, tw / w)
     nh, nw = max(1, round(h * scale)), max(1, round(w * scale))
     t = torch.from_numpy(np.ascontiguousarray(pixels))[None, None]
     resized = F.interpolate(t, size=(nh, nw), mode="area")[0, 0].numpy()
-    canvas = np.zeros((size, size), dtype=np.float32)
-    canvas[(size - nh) // 2 : (size - nh) // 2 + nh,
-           (size - nw) // 2 : (size - nw) // 2 + nw] = resized
+    canvas = np.zeros((th, tw), dtype=np.float32)
+    canvas[(th - nh) // 2 : (th - nh) // 2 + nh,
+           (tw - nw) // 2 : (tw - nw) // 2 + nw] = resized
     return canvas
 
 
@@ -70,7 +75,7 @@ class FrozenEncoder:
     """
 
     tag: str = "resnet50_in1k_v2_448"
-    input_size: int = 448
+    input_size: int | tuple[int, int] = 448
     embed_dim: int = 2048
     weights_path: str | None = None
     normalize: bool = True  # L2-norm suits generic frozen features; a fine-tuned

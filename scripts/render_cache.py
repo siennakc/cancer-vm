@@ -20,7 +20,13 @@ from oncoscope.data.dicom_canonical import load_canonical
 from oncoscope.data.mammography import read_case_table
 from oncoscope.models.encoder import breast_crop, letterbox
 
-RAW, OUT, SIZE = Path("data/raw"), Path("data/cache/render448"), 448
+import argparse
+_ap = argparse.ArgumentParser()
+_ap.add_argument("--out", default="data/cache/render448")
+_ap.add_argument("--height", type=int, default=448)
+_ap.add_argument("--width", type=int, default=448)
+_A = _ap.parse_args()
+RAW, OUT, SIZE = Path("data/raw"), Path(_A.out), (_A.height, _A.width)
 
 
 def render(case):

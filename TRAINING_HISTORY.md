@@ -27,7 +27,7 @@ never-trained external validation.
 | v1 | frozen ImageNet features + calibrated head | 0.628 | 0.512 (chance) | 0.707 |
 | v2 | end-to-end fine-tune @448 | *disqualified*¹ | 0.733 | 0.8165 |
 | v3 | v2 recipe + official-test quarantine | **0.742** | 0.664 | not spent |
-| v4 | + literature post-train @1152×896 | *training now* | — | — |
+| v4 | + literature post-train @1152×896 | **0.771** | **0.736** | — |
 
 ¹ v2 trained on 202/349 official-test patients before the quarantine existed;
 reporting it on the benchmark would be leakage.
@@ -94,8 +94,14 @@ stage. This is what makes benchmark numbers reportable at all.
 Subgroups (BenchX-style): mass 0.754 / calc 0.736; density a 0.836, b 0.795,
 **c 0.623 (weak slice)**, d 0.826; CC 0.768 / MLO 0.720.
 
-### v4 — post-training (in progress)
-See Part 3.
+### v4 — post-training @1152×896 (the literature recipe, applied)
+Method in Part 3. Cal AUROC 0.8331 → 0.8528 during training;
+**official CBIS test 0.742 → 0.771 [0.726–0.815]** (now inside the published
+0.75–0.88 range), **MIAS external 0.664 → 0.736**. The mechanism is visible in
+the subgroups: calcifications +0.067 (0.736 → 0.803) while masses stayed flat
+(0.754 → 0.748) — higher resolution recovers microcalcification detail, exactly
+the effect Shen et al. built their recipe around. Density-c remains the weak
+slice (0.629); resolution alone does not fix dense tissue.
 
 ## Part 3 — the post-training method (v4)
 

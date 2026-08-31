@@ -19,13 +19,15 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--weights", default=None)
 ap.add_argument("--raw", action="store_true")
 ap.add_argument("--gray-stats", action="store_true")
+ap.add_argument("--height", type=int, default=448)
+ap.add_argument("--width", type=int, default=448)
 ap.add_argument("--head", required=True)
 ap.add_argument("--name", required=True)
 args = ap.parse_args()
 
 kw = {"mean": (0.449,) * 3, "std": (0.226,) * 3} if args.gray_stats else {}
-enc = FrozenEncoder(tag="mias_eval", weights_path=args.weights,
-                    normalize=not args.raw, **kw)
+enc = FrozenEncoder(tag="mias_eval", weights_path=args.weights, normalize=not args.raw,
+                    input_size=(args.height, args.width), **kw)
 head = LogisticHead.load(args.head)
 
 cases = build_mias_cases(Path("data/raw/MIAS"))
