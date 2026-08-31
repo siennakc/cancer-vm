@@ -1,0 +1,1938 @@
+{
+ "version": "mias_v1",
+ "salt": "a934edb8c3aa397f0c02c29a884046c8",
+ "rows": [
+  {
+   "opaque_id": "00ef5d7788e88ca0",
+   "case_id": "mias-mdb101",
+   "patient_id": "mias-p051",
+   "label": 0
+  },
+  {
+   "opaque_id": "01bd6672b27472f7",
+   "case_id": "mias-mdb113",
+   "patient_id": "mias-p057",
+   "label": 0
+  },
+  {
+   "opaque_id": "02e4f1cd6c806130",
+   "case_id": "mias-mdb176",
+   "patient_id": "mias-p088",
+   "label": 0
+  },
+  {
+   "opaque_id": "03f6c313a161716a",
+   "case_id": "mias-mdb307",
+   "patient_id": "mias-p154",
+   "label": 0
+  },
+  {
+   "opaque_id": "0664a31176242d38",
+   "case_id": "mias-mdb260",
+   "patient_id": "mias-p130",
+   "label": 0
+  },
+  {
+   "opaque_id": "07f716bc93fc0ad5",
+   "case_id": "mias-mdb214",
+   "patient_id": "mias-p107",
+   "label": 0
+  },
+  {
+   "opaque_id": "08cc0a094294b023",
+   "case_id": "mias-mdb211",
+   "patient_id": "mias-p106",
+   "label": 1
+  },
+  {
+   "opaque_id": "08fe827f89bf181b",
+   "case_id": "mias-mdb055",
+   "patient_id": "mias-p028",
+   "label": 0
+  },
+  {
+   "opaque_id": "091066dfb691f280",
+   "case_id": "mias-mdb271",
+   "patient_id": "mias-p136",
+   "label": 1
+  },
+  {
+   "opaque_id": "092c6bd3843ae260",
+   "case_id": "mias-mdb175",
+   "patient_id": "mias-p088",
+   "label": 0
+  },
+  {
+   "opaque_id": "096539436d735692",
+   "case_id": "mias-mdb273",
+   "patient_id": "mias-p137",
+   "label": 0
+  },
+  {
+   "opaque_id": "09f39c7baaafa015",
+   "case_id": "mias-mdb268",
+   "patient_id": "mias-p134",
+   "label": 0
+  },
+  {
+   "opaque_id": "0a06cc124da6683a",
+   "case_id": "mias-mdb095",
+   "patient_id": "mias-p048",
+   "label": 1
+  },
+  {
+   "opaque_id": "0adb49bc24fcc8de",
+   "case_id": "mias-mdb246",
+   "patient_id": "mias-p123",
+   "label": 0
+  },
+  {
+   "opaque_id": "0b2573c0101f42a1",
+   "case_id": "mias-mdb139",
+   "patient_id": "mias-p070",
+   "label": 0
+  },
+  {
+   "opaque_id": "0b58c25d29a3f17f",
+   "case_id": "mias-mdb242",
+   "patient_id": "mias-p121",
+   "label": 0
+  },
+  {
+   "opaque_id": "0c528bf6ed40003e",
+   "case_id": "mias-mdb096",
+   "patient_id": "mias-p048",
+   "label": 0
+  },
+  {
+   "opaque_id": "0c793e51678698e8",
+   "case_id": "mias-mdb298",
+   "patient_id": "mias-p149",
+   "label": 0
+  },
+  {
+   "opaque_id": "0db2ac97ba898538",
+   "case_id": "mias-mdb294",
+   "patient_id": "mias-p147",
+   "label": 0
+  },
+  {
+   "opaque_id": "0e275e04b35c1058",
+   "case_id": "mias-mdb126",
+   "patient_id": "mias-p063",
+   "label": 0
+  },
+  {
+   "opaque_id": "0e3e63462c55a732",
+   "case_id": "mias-mdb232",
+   "patient_id": "mias-p116",
+   "label": 0
+  },
+  {
+   "opaque_id": "0e529ee565da6b5a",
+   "case_id": "mias-mdb083",
+   "patient_id": "mias-p042",
+   "label": 0
+  },
+  {
+   "opaque_id": "0fb9bd38765020cd",
+   "case_id": "mias-mdb050",
+   "patient_id": "mias-p025",
+   "label": 0
+  },
+  {
+   "opaque_id": "12acc4f3a059117a",
+   "case_id": "mias-mdb040",
+   "patient_id": "mias-p020",
+   "label": 0
+  },
+  {
+   "opaque_id": "131d0b4ccb768e8a",
+   "case_id": "mias-mdb212",
+   "patient_id": "mias-p106",
+   "label": 0
+  },
+  {
+   "opaque_id": "16f2fb9d82bc0d72",
+   "case_id": "mias-mdb016",
+   "patient_id": "mias-p008",
+   "label": 0
+  },
+  {
+   "opaque_id": "17231a4eb98251dc",
+   "case_id": "mias-mdb105",
+   "patient_id": "mias-p053",
+   "label": 1
+  },
+  {
+   "opaque_id": "17bee12860b7e4da",
+   "case_id": "mias-mdb178",
+   "patient_id": "mias-p089",
+   "label": 1
+  },
+  {
+   "opaque_id": "18220567f851cfa5",
+   "case_id": "mias-mdb081",
+   "patient_id": "mias-p041",
+   "label": 0
+  },
+  {
+   "opaque_id": "186b2f694b0696a1",
+   "case_id": "mias-mdb115",
+   "patient_id": "mias-p058",
+   "label": 1
+  },
+  {
+   "opaque_id": "1923f0cfdaca2146",
+   "case_id": "mias-mdb137",
+   "patient_id": "mias-p069",
+   "label": 0
+  },
+  {
+   "opaque_id": "19552d074f6b70d3",
+   "case_id": "mias-mdb156",
+   "patient_id": "mias-p078",
+   "label": 0
+  },
+  {
+   "opaque_id": "199f46d4b79dd508",
+   "case_id": "mias-mdb010",
+   "patient_id": "mias-p005",
+   "label": 0
+  },
+  {
+   "opaque_id": "19cd4c48a5f26ca1",
+   "case_id": "mias-mdb293",
+   "patient_id": "mias-p147",
+   "label": 0
+  },
+  {
+   "opaque_id": "1a2e4e4cae1c452a",
+   "case_id": "mias-mdb303",
+   "patient_id": "mias-p152",
+   "label": 0
+  },
+  {
+   "opaque_id": "1b9d11341b02b8fd",
+   "case_id": "mias-mdb236",
+   "patient_id": "mias-p118",
+   "label": 0
+  },
+  {
+   "opaque_id": "1c9110b14d71c8bb",
+   "case_id": "mias-mdb138",
+   "patient_id": "mias-p069",
+   "label": 0
+  },
+  {
+   "opaque_id": "1c99867149a09451",
+   "case_id": "mias-mdb125",
+   "patient_id": "mias-p063",
+   "label": 1
+  },
+  {
+   "opaque_id": "1d1001cb45fc432c",
+   "case_id": "mias-mdb213",
+   "patient_id": "mias-p107",
+   "label": 1
+  },
+  {
+   "opaque_id": "1e50873e57f76eeb",
+   "case_id": "mias-mdb192",
+   "patient_id": "mias-p096",
+   "label": 0
+  },
+  {
+   "opaque_id": "1f40ad3a80a1eb58",
+   "case_id": "mias-mdb227",
+   "patient_id": "mias-p114",
+   "label": 0
+  },
+  {
+   "opaque_id": "208e89be6f8fca74",
+   "case_id": "mias-mdb102",
+   "patient_id": "mias-p051",
+   "label": 1
+  },
+  {
+   "opaque_id": "218d59344c66195f",
+   "case_id": "mias-mdb262",
+   "patient_id": "mias-p131",
+   "label": 0
+  },
+  {
+   "opaque_id": "220201da64138402",
+   "case_id": "mias-mdb047",
+   "patient_id": "mias-p024",
+   "label": 0
+  },
+  {
+   "opaque_id": "2223c58783b0282f",
+   "case_id": "mias-mdb122",
+   "patient_id": "mias-p061",
+   "label": 0
+  },
+  {
+   "opaque_id": "227a581fcf24fa8a",
+   "case_id": "mias-mdb295",
+   "patient_id": "mias-p148",
+   "label": 0
+  },
+  {
+   "opaque_id": "22861c1c62d7f3d0",
+   "case_id": "mias-mdb270",
+   "patient_id": "mias-p135",
+   "label": 1
+  },
+  {
+   "opaque_id": "22c7aa786398c186",
+   "case_id": "mias-mdb134",
+   "patient_id": "mias-p067",
+   "label": 1
+  },
+  {
+   "opaque_id": "231861dcc6d9bd34",
+   "case_id": "mias-mdb276",
+   "patient_id": "mias-p138",
+   "label": 0
+  },
+  {
+   "opaque_id": "23ddeff5a3e2e4c7",
+   "case_id": "mias-mdb162",
+   "patient_id": "mias-p081",
+   "label": 0
+  },
+  {
+   "opaque_id": "266cccc4d5cc6beb",
+   "case_id": "mias-mdb281",
+   "patient_id": "mias-p141",
+   "label": 0
+  },
+  {
+   "opaque_id": "2811b2bc3ed3a0c4",
+   "case_id": "mias-mdb231",
+   "patient_id": "mias-p116",
+   "label": 1
+  },
+  {
+   "opaque_id": "28d34f745c852efb",
+   "case_id": "mias-mdb114",
+   "patient_id": "mias-p057",
+   "label": 0
+  },
+  {
+   "opaque_id": "29b05d8f6898c1e9",
+   "case_id": "mias-mdb066",
+   "patient_id": "mias-p033",
+   "label": 0
+  },
+  {
+   "opaque_id": "29c0cce4f28a4298",
+   "case_id": "mias-mdb065",
+   "patient_id": "mias-p033",
+   "label": 0
+  },
+  {
+   "opaque_id": "2a3e070c5fbc6e76",
+   "case_id": "mias-mdb056",
+   "patient_id": "mias-p028",
+   "label": 0
+  },
+  {
+   "opaque_id": "2b4897bf1ceb4d18",
+   "case_id": "mias-mdb266",
+   "patient_id": "mias-p133",
+   "label": 0
+  },
+  {
+   "opaque_id": "2be608ff0ea57581",
+   "case_id": "mias-mdb148",
+   "patient_id": "mias-p074",
+   "label": 1
+  },
+  {
+   "opaque_id": "2da43b0fd61f7e29",
+   "case_id": "mias-mdb049",
+   "patient_id": "mias-p025",
+   "label": 0
+  },
+  {
+   "opaque_id": "2e705638fa2324be",
+   "case_id": "mias-mdb121",
+   "patient_id": "mias-p061",
+   "label": 0
+  },
+  {
+   "opaque_id": "2e9817a81c6477f5",
+   "case_id": "mias-mdb275",
+   "patient_id": "mias-p138",
+   "label": 0
+  },
+  {
+   "opaque_id": "307e90f6f01553e3",
+   "case_id": "mias-mdb111",
+   "patient_id": "mias-p056",
+   "label": 1
+  },
+  {
+   "opaque_id": "30f02fb9c49acaa8",
+   "case_id": "mias-mdb142",
+   "patient_id": "mias-p071",
+   "label": 0
+  },
+  {
+   "opaque_id": "314d468ce33c9304",
+   "case_id": "mias-mdb112",
+   "patient_id": "mias-p056",
+   "label": 0
+  },
+  {
+   "opaque_id": "31ccee925f30571c",
+   "case_id": "mias-mdb017",
+   "patient_id": "mias-p009",
+   "label": 0
+  },
+  {
+   "opaque_id": "35fa4e474ba1df13",
+   "case_id": "mias-mdb014",
+   "patient_id": "mias-p007",
+   "label": 0
+  },
+  {
+   "opaque_id": "367cae5a4ce82283",
+   "case_id": "mias-mdb256",
+   "patient_id": "mias-p128",
+   "label": 1
+  },
+  {
+   "opaque_id": "375b2b1c169a1ad0",
+   "case_id": "mias-mdb321",
+   "patient_id": "mias-p161",
+   "label": 0
+  },
+  {
+   "opaque_id": "3828f50cc543c182",
+   "case_id": "mias-mdb155",
+   "patient_id": "mias-p078",
+   "label": 1
+  },
+  {
+   "opaque_id": "3835b06f188e24b2",
+   "case_id": "mias-mdb304",
+   "patient_id": "mias-p152",
+   "label": 0
+  },
+  {
+   "opaque_id": "3b248436881639be",
+   "case_id": "mias-mdb258",
+   "patient_id": "mias-p129",
+   "label": 0
+  },
+  {
+   "opaque_id": "3b371228b4373c1e",
+   "case_id": "mias-mdb161",
+   "patient_id": "mias-p081",
+   "label": 0
+  },
+  {
+   "opaque_id": "3cf4ef9cfa91a367",
+   "case_id": "mias-mdb140",
+   "patient_id": "mias-p070",
+   "label": 0
+  },
+  {
+   "opaque_id": "3d00dd4bd1581035",
+   "case_id": "mias-mdb070",
+   "patient_id": "mias-p035",
+   "label": 0
+  },
+  {
+   "opaque_id": "3d34c37e04a97be6",
+   "case_id": "mias-mdb067",
+   "patient_id": "mias-p034",
+   "label": 0
+  },
+  {
+   "opaque_id": "3db59c3637412cf1",
+   "case_id": "mias-mdb280",
+   "patient_id": "mias-p140",
+   "label": 0
+  },
+  {
+   "opaque_id": "3e08d70c3fde1c78",
+   "case_id": "mias-mdb234",
+   "patient_id": "mias-p117",
+   "label": 0
+  },
+  {
+   "opaque_id": "3e29053363bdc93f",
+   "case_id": "mias-mdb131",
+   "patient_id": "mias-p066",
+   "label": 0
+  },
+  {
+   "opaque_id": "3f394e62a3c921fa",
+   "case_id": "mias-mdb147",
+   "patient_id": "mias-p074",
+   "label": 0
+  },
+  {
+   "opaque_id": "3f91c5738bbffe4b",
+   "case_id": "mias-mdb054",
+   "patient_id": "mias-p027",
+   "label": 0
+  },
+  {
+   "opaque_id": "4037f1686b4f88de",
+   "case_id": "mias-mdb159",
+   "patient_id": "mias-p080",
+   "label": 0
+  },
+  {
+   "opaque_id": "405bd65ab8a407d2",
+   "case_id": "mias-mdb288",
+   "patient_id": "mias-p144",
+   "label": 0
+  },
+  {
+   "opaque_id": "4345cc7221c1361d",
+   "case_id": "mias-mdb296",
+   "patient_id": "mias-p148",
+   "label": 0
+  },
+  {
+   "opaque_id": "43921454ff744a9d",
+   "case_id": "mias-mdb200",
+   "patient_id": "mias-p100",
+   "label": 0
+  },
+  {
+   "opaque_id": "47168578f286633b",
+   "case_id": "mias-mdb009",
+   "patient_id": "mias-p005",
+   "label": 0
+  },
+  {
+   "opaque_id": "4849865c5e52be47",
+   "case_id": "mias-mdb015",
+   "patient_id": "mias-p008",
+   "label": 0
+  },
+  {
+   "opaque_id": "49d41980d912be8a",
+   "case_id": "mias-mdb099",
+   "patient_id": "mias-p050",
+   "label": 0
+  },
+  {
+   "opaque_id": "49d7f7e1a27ea3ba",
+   "case_id": "mias-mdb028",
+   "patient_id": "mias-p014",
+   "label": 1
+  },
+  {
+   "opaque_id": "4a50dd845a3fa84f",
+   "case_id": "mias-mdb117",
+   "patient_id": "mias-p059",
+   "label": 1
+  },
+  {
+   "opaque_id": "4a92d03ea9900bfc",
+   "case_id": "mias-mdb229",
+   "patient_id": "mias-p115",
+   "label": 0
+  },
+  {
+   "opaque_id": "4b07989d35a30c11",
+   "case_id": "mias-mdb082",
+   "patient_id": "mias-p041",
+   "label": 0
+  },
+  {
+   "opaque_id": "4c9147ff36c49048",
+   "case_id": "mias-mdb038",
+   "patient_id": "mias-p019",
+   "label": 0
+  },
+  {
+   "opaque_id": "4ce4bce4f0c251fe",
+   "case_id": "mias-mdb292",
+   "patient_id": "mias-p146",
+   "label": 0
+  },
+  {
+   "opaque_id": "4dd5842ba584cde7",
+   "case_id": "mias-mdb023",
+   "patient_id": "mias-p012",
+   "label": 1
+  },
+  {
+   "opaque_id": "4dfe7936077ecb6a",
+   "case_id": "mias-mdb313",
+   "patient_id": "mias-p157",
+   "label": 0
+  },
+  {
+   "opaque_id": "4e6c0006fc6c7631",
+   "case_id": "mias-mdb123",
+   "patient_id": "mias-p062",
+   "label": 0
+  },
+  {
+   "opaque_id": "4ef87a5053e36c86",
+   "case_id": "mias-mdb034",
+   "patient_id": "mias-p017",
+   "label": 0
+  },
+  {
+   "opaque_id": "4f3865a9426861ed",
+   "case_id": "mias-mdb052",
+   "patient_id": "mias-p026",
+   "label": 0
+  },
+  {
+   "opaque_id": "523f4aa5e59971f8",
+   "case_id": "mias-mdb311",
+   "patient_id": "mias-p156",
+   "label": 0
+  },
+  {
+   "opaque_id": "5316f10676507c5b",
+   "case_id": "mias-mdb172",
+   "patient_id": "mias-p086",
+   "label": 0
+  },
+  {
+   "opaque_id": "53399408d309cfa2",
+   "case_id": "mias-mdb164",
+   "patient_id": "mias-p082",
+   "label": 0
+  },
+  {
+   "opaque_id": "542ef4ae1d786905",
+   "case_id": "mias-mdb184",
+   "patient_id": "mias-p092",
+   "label": 1
+  },
+  {
+   "opaque_id": "564e8e7a19f15e59",
+   "case_id": "mias-mdb084",
+   "patient_id": "mias-p042",
+   "label": 0
+  },
+  {
+   "opaque_id": "56b49668e8adab73",
+   "case_id": "mias-mdb089",
+   "patient_id": "mias-p045",
+   "label": 0
+  },
+  {
+   "opaque_id": "570682b61762946a",
+   "case_id": "mias-mdb207",
+   "patient_id": "mias-p104",
+   "label": 0
+  },
+  {
+   "opaque_id": "5707a5a72200e1f9",
+   "case_id": "mias-mdb285",
+   "patient_id": "mias-p143",
+   "label": 0
+  },
+  {
+   "opaque_id": "5a070418cd4d7abc",
+   "case_id": "mias-mdb110",
+   "patient_id": "mias-p055",
+   "label": 1
+  },
+  {
+   "opaque_id": "5c41d76aacdd0fcd",
+   "case_id": "mias-mdb031",
+   "patient_id": "mias-p016",
+   "label": 0
+  },
+  {
+   "opaque_id": "5ded7fef40d0c5e0",
+   "case_id": "mias-mdb319",
+   "patient_id": "mias-p160",
+   "label": 0
+  },
+  {
+   "opaque_id": "5f421ac215505dd2",
+   "case_id": "mias-mdb203",
+   "patient_id": "mias-p102",
+   "label": 0
+  },
+  {
+   "opaque_id": "5f6ad0c2fd78ae56",
+   "case_id": "mias-mdb091",
+   "patient_id": "mias-p046",
+   "label": 0
+  },
+  {
+   "opaque_id": "618fa7ffa3c067dd",
+   "case_id": "mias-mdb254",
+   "patient_id": "mias-p127",
+   "label": 0
+  },
+  {
+   "opaque_id": "635fcf808a773514",
+   "case_id": "mias-mdb120",
+   "patient_id": "mias-p060",
+   "label": 1
+  },
+  {
+   "opaque_id": "65bbd79f853a35e4",
+   "case_id": "mias-mdb206",
+   "patient_id": "mias-p103",
+   "label": 1
+  },
+  {
+   "opaque_id": "6662b44c95db4f7d",
+   "case_id": "mias-mdb075",
+   "patient_id": "mias-p038",
+   "label": 1
+  },
+  {
+   "opaque_id": "66b67389e20b515f",
+   "case_id": "mias-mdb165",
+   "patient_id": "mias-p083",
+   "label": 0
+  },
+  {
+   "opaque_id": "671639aefd810975",
+   "case_id": "mias-mdb185",
+   "patient_id": "mias-p093",
+   "label": 0
+  },
+  {
+   "opaque_id": "676cac68ab628136",
+   "case_id": "mias-mdb069",
+   "patient_id": "mias-p035",
+   "label": 0
+  },
+  {
+   "opaque_id": "68ad3ffb8cdf2b1c",
+   "case_id": "mias-mdb300",
+   "patient_id": "mias-p150",
+   "label": 0
+  },
+  {
+   "opaque_id": "68eb357854f5f526",
+   "case_id": "mias-mdb186",
+   "patient_id": "mias-p093",
+   "label": 1
+  },
+  {
+   "opaque_id": "698104bcffe2a71c",
+   "case_id": "mias-mdb173",
+   "patient_id": "mias-p087",
+   "label": 0
+  },
+  {
+   "opaque_id": "69cd11b60a88ab6b",
+   "case_id": "mias-mdb199",
+   "patient_id": "mias-p100",
+   "label": 0
+  },
+  {
+   "opaque_id": "6a635f1c41a82938",
+   "case_id": "mias-mdb223",
+   "patient_id": "mias-p112",
+   "label": 0
+  },
+  {
+   "opaque_id": "6ae87fd1ba16016c",
+   "case_id": "mias-mdb264",
+   "patient_id": "mias-p132",
+   "label": 1
+  },
+  {
+   "opaque_id": "6b8146603eeb69e8",
+   "case_id": "mias-mdb287",
+   "patient_id": "mias-p144",
+   "label": 0
+  },
+  {
+   "opaque_id": "6c43d0eab005e7a2",
+   "case_id": "mias-mdb191",
+   "patient_id": "mias-p096",
+   "label": 0
+  },
+  {
+   "opaque_id": "6d1fa0c3e949e1c5",
+   "case_id": "mias-mdb290",
+   "patient_id": "mias-p145",
+   "label": 0
+  },
+  {
+   "opaque_id": "6d5ec9459ba66834",
+   "case_id": "mias-mdb004",
+   "patient_id": "mias-p002",
+   "label": 0
+  },
+  {
+   "opaque_id": "6d8d56dd33babda6",
+   "case_id": "mias-mdb253",
+   "patient_id": "mias-p127",
+   "label": 1
+  },
+  {
+   "opaque_id": "6dc027103b0b0988",
+   "case_id": "mias-mdb169",
+   "patient_id": "mias-p085",
+   "label": 0
+  },
+  {
+   "opaque_id": "6ddfafcced7615d8",
+   "case_id": "mias-mdb073",
+   "patient_id": "mias-p037",
+   "label": 0
+  },
+  {
+   "opaque_id": "6df170d7466bdae7",
+   "case_id": "mias-mdb076",
+   "patient_id": "mias-p038",
+   "label": 0
+  },
+  {
+   "opaque_id": "6df430ffdc60cb72",
+   "case_id": "mias-mdb183",
+   "patient_id": "mias-p092",
+   "label": 0
+  },
+  {
+   "opaque_id": "6ee9eaed13bfdcc3",
+   "case_id": "mias-mdb278",
+   "patient_id": "mias-p139",
+   "label": 0
+  },
+  {
+   "opaque_id": "6f72d5df7f4d0746",
+   "case_id": "mias-mdb196",
+   "patient_id": "mias-p098",
+   "label": 0
+  },
+  {
+   "opaque_id": "6fbd2ed1b6e9775c",
+   "case_id": "mias-mdb024",
+   "patient_id": "mias-p012",
+   "label": 0
+  },
+  {
+   "opaque_id": "70156995d0f641c8",
+   "case_id": "mias-mdb133",
+   "patient_id": "mias-p067",
+   "label": 0
+  },
+  {
+   "opaque_id": "70bf7d4b069ef1bb",
+   "case_id": "mias-mdb136",
+   "patient_id": "mias-p068",
+   "label": 0
+  },
+  {
+   "opaque_id": "710ff9f14cd5f7cf",
+   "case_id": "mias-mdb316",
+   "patient_id": "mias-p158",
+   "label": 0
+  },
+  {
+   "opaque_id": "71eca8eedabfc357",
+   "case_id": "mias-mdb026",
+   "patient_id": "mias-p013",
+   "label": 0
+  },
+  {
+   "opaque_id": "720e06d8c5e76326",
+   "case_id": "mias-mdb190",
+   "patient_id": "mias-p095",
+   "label": 0
+  },
+  {
+   "opaque_id": "723fb1a9996fb587",
+   "case_id": "mias-mdb041",
+   "patient_id": "mias-p021",
+   "label": 0
+  },
+  {
+   "opaque_id": "74734ecfadf93bd9",
+   "case_id": "mias-mdb011",
+   "patient_id": "mias-p006",
+   "label": 0
+  },
+  {
+   "opaque_id": "74dcf40ed5e1ac36",
+   "case_id": "mias-mdb282",
+   "patient_id": "mias-p141",
+   "label": 0
+  },
+  {
+   "opaque_id": "7505976fc4292b3c",
+   "case_id": "mias-mdb257",
+   "patient_id": "mias-p129",
+   "label": 0
+  },
+  {
+   "opaque_id": "763d7e5f892aee42",
+   "case_id": "mias-mdb263",
+   "patient_id": "mias-p132",
+   "label": 0
+  },
+  {
+   "opaque_id": "7883acb0551caa4a",
+   "case_id": "mias-mdb020",
+   "patient_id": "mias-p010",
+   "label": 0
+  },
+  {
+   "opaque_id": "79b4c61bd93fbc25",
+   "case_id": "mias-mdb226",
+   "patient_id": "mias-p113",
+   "label": 0
+  },
+  {
+   "opaque_id": "7af2864b45f2ae1b",
+   "case_id": "mias-mdb219",
+   "patient_id": "mias-p110",
+   "label": 0
+  },
+  {
+   "opaque_id": "7b25cc69cf0318ba",
+   "case_id": "mias-mdb274",
+   "patient_id": "mias-p137",
+   "label": 1
+  },
+  {
+   "opaque_id": "7ba0a9f8effd0512",
+   "case_id": "mias-mdb035",
+   "patient_id": "mias-p018",
+   "label": 0
+  },
+  {
+   "opaque_id": "7cf754239c80dc0e",
+   "case_id": "mias-mdb174",
+   "patient_id": "mias-p087",
+   "label": 0
+  },
+  {
+   "opaque_id": "7dcb67b248e07438",
+   "case_id": "mias-mdb100",
+   "patient_id": "mias-p050",
+   "label": 0
+  },
+  {
+   "opaque_id": "7e27f136b3d13009",
+   "case_id": "mias-mdb157",
+   "patient_id": "mias-p079",
+   "label": 0
+  },
+  {
+   "opaque_id": "7f2e929564ace7ee",
+   "case_id": "mias-mdb179",
+   "patient_id": "mias-p090",
+   "label": 1
+  },
+  {
+   "opaque_id": "7f6a59e8b8d93343",
+   "case_id": "mias-mdb051",
+   "patient_id": "mias-p026",
+   "label": 0
+  },
+  {
+   "opaque_id": "7f6d38fe025e35f2",
+   "case_id": "mias-mdb221",
+   "patient_id": "mias-p111",
+   "label": 0
+  },
+  {
+   "opaque_id": "7f7114613e837914",
+   "case_id": "mias-mdb064",
+   "patient_id": "mias-p032",
+   "label": 0
+  },
+  {
+   "opaque_id": "80865da7e6f74563",
+   "case_id": "mias-mdb222",
+   "patient_id": "mias-p111",
+   "label": 0
+  },
+  {
+   "opaque_id": "8188862e4f2861f6",
+   "case_id": "mias-mdb301",
+   "patient_id": "mias-p151",
+   "label": 0
+  },
+  {
+   "opaque_id": "839be7a37b8bc7f9",
+   "case_id": "mias-mdb182",
+   "patient_id": "mias-p091",
+   "label": 0
+  },
+  {
+   "opaque_id": "84a7184f9f0b563a",
+   "case_id": "mias-mdb087",
+   "patient_id": "mias-p044",
+   "label": 0
+  },
+  {
+   "opaque_id": "862c691a3e801f7e",
+   "case_id": "mias-mdb098",
+   "patient_id": "mias-p049",
+   "label": 0
+  },
+  {
+   "opaque_id": "871a5dc3e23c41e1",
+   "case_id": "mias-mdb044",
+   "patient_id": "mias-p022",
+   "label": 0
+  },
+  {
+   "opaque_id": "879d7e72ea058da6",
+   "case_id": "mias-mdb103",
+   "patient_id": "mias-p052",
+   "label": 0
+  },
+  {
+   "opaque_id": "88598964703a657b",
+   "case_id": "mias-mdb022",
+   "patient_id": "mias-p011",
+   "label": 0
+  },
+  {
+   "opaque_id": "88abae479f7af262",
+   "case_id": "mias-mdb322",
+   "patient_id": "mias-p161",
+   "label": 0
+  },
+  {
+   "opaque_id": "8947d8968dfef836",
+   "case_id": "mias-mdb104",
+   "patient_id": "mias-p052",
+   "label": 0
+  },
+  {
+   "opaque_id": "898d1d0c19ac3d2b",
+   "case_id": "mias-mdb107",
+   "patient_id": "mias-p054",
+   "label": 0
+  },
+  {
+   "opaque_id": "8b3281662f1bf726",
+   "case_id": "mias-mdb171",
+   "patient_id": "mias-p086",
+   "label": 1
+  },
+  {
+   "opaque_id": "8b949ee9461ef5dc",
+   "case_id": "mias-mdb284",
+   "patient_id": "mias-p142",
+   "label": 0
+  },
+  {
+   "opaque_id": "8ce6866b07233585",
+   "case_id": "mias-mdb006",
+   "patient_id": "mias-p003",
+   "label": 0
+  },
+  {
+   "opaque_id": "8d472efac90e34cc",
+   "case_id": "mias-mdb092",
+   "patient_id": "mias-p046",
+   "label": 1
+  },
+  {
+   "opaque_id": "8d7be26b2c53eb8c",
+   "case_id": "mias-mdb061",
+   "patient_id": "mias-p031",
+   "label": 0
+  },
+  {
+   "opaque_id": "8dcb23d823a1f7eb",
+   "case_id": "mias-mdb129",
+   "patient_id": "mias-p065",
+   "label": 0
+  },
+  {
+   "opaque_id": "8e0963129731f9b8",
+   "case_id": "mias-mdb267",
+   "patient_id": "mias-p134",
+   "label": 1
+  },
+  {
+   "opaque_id": "8f1d1ce7871521d1",
+   "case_id": "mias-mdb235",
+   "patient_id": "mias-p118",
+   "label": 0
+  },
+  {
+   "opaque_id": "91ae87797192be64",
+   "case_id": "mias-mdb109",
+   "patient_id": "mias-p055",
+   "label": 0
+  },
+  {
+   "opaque_id": "91aec0aa098c1f3b",
+   "case_id": "mias-mdb127",
+   "patient_id": "mias-p064",
+   "label": 0
+  },
+  {
+   "opaque_id": "9202f6b35f37eea7",
+   "case_id": "mias-mdb194",
+   "patient_id": "mias-p097",
+   "label": 0
+  },
+  {
+   "opaque_id": "92dc794a8ab3df34",
+   "case_id": "mias-mdb124",
+   "patient_id": "mias-p062",
+   "label": 1
+  },
+  {
+   "opaque_id": "9367813f3cb6750d",
+   "case_id": "mias-mdb259",
+   "patient_id": "mias-p130",
+   "label": 0
+  },
+  {
+   "opaque_id": "95080de5e47da9cd",
+   "case_id": "mias-mdb018",
+   "patient_id": "mias-p009",
+   "label": 0
+  },
+  {
+   "opaque_id": "9526c015d3fa1c23",
+   "case_id": "mias-mdb078",
+   "patient_id": "mias-p039",
+   "label": 0
+  },
+  {
+   "opaque_id": "9588a1b697473115",
+   "case_id": "mias-mdb308",
+   "patient_id": "mias-p154",
+   "label": 0
+  },
+  {
+   "opaque_id": "969e679acbb1205a",
+   "case_id": "mias-mdb150",
+   "patient_id": "mias-p075",
+   "label": 0
+  },
+  {
+   "opaque_id": "97074eecb55f3720",
+   "case_id": "mias-mdb143",
+   "patient_id": "mias-p072",
+   "label": 0
+  },
+  {
+   "opaque_id": "97262441119524ed",
+   "case_id": "mias-mdb152",
+   "patient_id": "mias-p076",
+   "label": 0
+  },
+  {
+   "opaque_id": "976fcbaa2001f989",
+   "case_id": "mias-mdb088",
+   "patient_id": "mias-p044",
+   "label": 0
+  },
+  {
+   "opaque_id": "980edd227daefa58",
+   "case_id": "mias-mdb209",
+   "patient_id": "mias-p105",
+   "label": 1
+  },
+  {
+   "opaque_id": "98bddf9182ff06ff",
+   "case_id": "mias-mdb108",
+   "patient_id": "mias-p054",
+   "label": 0
+  },
+  {
+   "opaque_id": "9a2bb0d6f2d62af6",
+   "case_id": "mias-mdb277",
+   "patient_id": "mias-p139",
+   "label": 0
+  },
+  {
+   "opaque_id": "9ac03a651f2b8040",
+   "case_id": "mias-mdb007",
+   "patient_id": "mias-p004",
+   "label": 0
+  },
+  {
+   "opaque_id": "9ac5a157a00b8948",
+   "case_id": "mias-mdb230",
+   "patient_id": "mias-p115",
+   "label": 0
+  },
+  {
+   "opaque_id": "9b97feb1c5ba2d7c",
+   "case_id": "mias-mdb116",
+   "patient_id": "mias-p058",
+   "label": 0
+  },
+  {
+   "opaque_id": "9bbe31afa42971f8",
+   "case_id": "mias-mdb048",
+   "patient_id": "mias-p024",
+   "label": 0
+  },
+  {
+   "opaque_id": "9c10ec1767faedc8",
+   "case_id": "mias-mdb265",
+   "patient_id": "mias-p133",
+   "label": 1
+  },
+  {
+   "opaque_id": "9c66b0c4effb8b7e",
+   "case_id": "mias-mdb154",
+   "patient_id": "mias-p077",
+   "label": 0
+  },
+  {
+   "opaque_id": "9d61e3dd29f306de",
+   "case_id": "mias-mdb168",
+   "patient_id": "mias-p084",
+   "label": 0
+  },
+  {
+   "opaque_id": "9e734939a76f9bbe",
+   "case_id": "mias-mdb239",
+   "patient_id": "mias-p120",
+   "label": 1
+  },
+  {
+   "opaque_id": "9ef404f4e7689dca",
+   "case_id": "mias-mdb286",
+   "patient_id": "mias-p143",
+   "label": 0
+  },
+  {
+   "opaque_id": "9f50cb2ba0a4d073",
+   "case_id": "mias-mdb141",
+   "patient_id": "mias-p071",
+   "label": 1
+  },
+  {
+   "opaque_id": "9f845b43cc5095aa",
+   "case_id": "mias-mdb305",
+   "patient_id": "mias-p153",
+   "label": 0
+  },
+  {
+   "opaque_id": "a348ebc9cfe618a0",
+   "case_id": "mias-mdb188",
+   "patient_id": "mias-p094",
+   "label": 0
+  },
+  {
+   "opaque_id": "a374179d5c20d65c",
+   "case_id": "mias-mdb008",
+   "patient_id": "mias-p004",
+   "label": 0
+  },
+  {
+   "opaque_id": "a4d3217e2f8e2ba3",
+   "case_id": "mias-mdb181",
+   "patient_id": "mias-p091",
+   "label": 1
+  },
+  {
+   "opaque_id": "a4db0f8836d444ee",
+   "case_id": "mias-mdb013",
+   "patient_id": "mias-p007",
+   "label": 0
+  },
+  {
+   "opaque_id": "a50de4f70b04d4b8",
+   "case_id": "mias-mdb072",
+   "patient_id": "mias-p036",
+   "label": 1
+  },
+  {
+   "opaque_id": "a5ddde1f2fa69840",
+   "case_id": "mias-mdb046",
+   "patient_id": "mias-p023",
+   "label": 0
+  },
+  {
+   "opaque_id": "a62206bb99ea071e",
+   "case_id": "mias-mdb237",
+   "patient_id": "mias-p119",
+   "label": 0
+  },
+  {
+   "opaque_id": "a63f848bc11bbe77",
+   "case_id": "mias-mdb315",
+   "patient_id": "mias-p158",
+   "label": 0
+  },
+  {
+   "opaque_id": "a6e6c3e9e83ef51a",
+   "case_id": "mias-mdb193",
+   "patient_id": "mias-p097",
+   "label": 0
+  },
+  {
+   "opaque_id": "a7d9f4dd6d294214",
+   "case_id": "mias-mdb228",
+   "patient_id": "mias-p114",
+   "label": 0
+  },
+  {
+   "opaque_id": "a8de1d45f1359c5a",
+   "case_id": "mias-mdb243",
+   "patient_id": "mias-p122",
+   "label": 0
+  },
+  {
+   "opaque_id": "a8fd3f982c65805f",
+   "case_id": "mias-mdb244",
+   "patient_id": "mias-p122",
+   "label": 0
+  },
+  {
+   "opaque_id": "a93a049927af4c7f",
+   "case_id": "mias-mdb001",
+   "patient_id": "mias-p001",
+   "label": 0
+  },
+  {
+   "opaque_id": "aa04fb969e611ce9",
+   "case_id": "mias-mdb314",
+   "patient_id": "mias-p157",
+   "label": 0
+  },
+  {
+   "opaque_id": "abb4f130e0016935",
+   "case_id": "mias-mdb145",
+   "patient_id": "mias-p073",
+   "label": 0
+  },
+  {
+   "opaque_id": "acbd908031c9d34f",
+   "case_id": "mias-mdb210",
+   "patient_id": "mias-p105",
+   "label": 0
+  },
+  {
+   "opaque_id": "ad2b11834e734797",
+   "case_id": "mias-mdb320",
+   "patient_id": "mias-p160",
+   "label": 0
+  },
+  {
+   "opaque_id": "adf9b335f60d76e9",
+   "case_id": "mias-mdb062",
+   "patient_id": "mias-p031",
+   "label": 0
+  },
+  {
+   "opaque_id": "ae5ae4cf4aaa3214",
+   "case_id": "mias-mdb198",
+   "patient_id": "mias-p099",
+   "label": 0
+  },
+  {
+   "opaque_id": "af09ad36ecdc951b",
+   "case_id": "mias-mdb204",
+   "patient_id": "mias-p102",
+   "label": 0
+  },
+  {
+   "opaque_id": "af3b14752500439c",
+   "case_id": "mias-mdb170",
+   "patient_id": "mias-p085",
+   "label": 1
+  },
+  {
+   "opaque_id": "b08a728361f5ebd4",
+   "case_id": "mias-mdb279",
+   "patient_id": "mias-p140",
+   "label": 0
+  },
+  {
+   "opaque_id": "b11556dfa416b683",
+   "case_id": "mias-mdb146",
+   "patient_id": "mias-p073",
+   "label": 0
+  },
+  {
+   "opaque_id": "b12a553e48ae82b1",
+   "case_id": "mias-mdb153",
+   "patient_id": "mias-p077",
+   "label": 0
+  },
+  {
+   "opaque_id": "b2b4c02200e7a772",
+   "case_id": "mias-mdb306",
+   "patient_id": "mias-p153",
+   "label": 0
+  },
+  {
+   "opaque_id": "b319e12bf036ade9",
+   "case_id": "mias-mdb086",
+   "patient_id": "mias-p043",
+   "label": 0
+  },
+  {
+   "opaque_id": "b3a89eba22cbf54f",
+   "case_id": "mias-mdb160",
+   "patient_id": "mias-p080",
+   "label": 0
+  },
+  {
+   "opaque_id": "b441bf5c9c9cc48d",
+   "case_id": "mias-mdb128",
+   "patient_id": "mias-p064",
+   "label": 0
+  },
+  {
+   "opaque_id": "b4d4a30dbb526b75",
+   "case_id": "mias-mdb218",
+   "patient_id": "mias-p109",
+   "label": 0
+  },
+  {
+   "opaque_id": "b5e6b4ed792f6911",
+   "case_id": "mias-mdb029",
+   "patient_id": "mias-p015",
+   "label": 0
+  },
+  {
+   "opaque_id": "b65682f4f02667d1",
+   "case_id": "mias-mdb090",
+   "patient_id": "mias-p045",
+   "label": 1
+  },
+  {
+   "opaque_id": "b656fe83067b8f59",
+   "case_id": "mias-mdb217",
+   "patient_id": "mias-p109",
+   "label": 0
+  },
+  {
+   "opaque_id": "b81aa63dab2f37eb",
+   "case_id": "mias-mdb039",
+   "patient_id": "mias-p020",
+   "label": 0
+  },
+  {
+   "opaque_id": "b872496dad3ac3d0",
+   "case_id": "mias-mdb272",
+   "patient_id": "mias-p136",
+   "label": 0
+  },
+  {
+   "opaque_id": "ba1974fe4c8cd216",
+   "case_id": "mias-mdb215",
+   "patient_id": "mias-p108",
+   "label": 0
+  },
+  {
+   "opaque_id": "baea7143b1db5048",
+   "case_id": "mias-mdb297",
+   "patient_id": "mias-p149",
+   "label": 0
+  },
+  {
+   "opaque_id": "bc909d53a28565b7",
+   "case_id": "mias-mdb019",
+   "patient_id": "mias-p010",
+   "label": 0
+  },
+  {
+   "opaque_id": "be52c402f2345935",
+   "case_id": "mias-mdb248",
+   "patient_id": "mias-p124",
+   "label": 0
+  },
+  {
+   "opaque_id": "bee3aae43d2a6b98",
+   "case_id": "mias-mdb021",
+   "patient_id": "mias-p011",
+   "label": 0
+  },
+  {
+   "opaque_id": "bf28704ea589a673",
+   "case_id": "mias-mdb118",
+   "patient_id": "mias-p059",
+   "label": 0
+  },
+  {
+   "opaque_id": "bf61d495a7065c7b",
+   "case_id": "mias-mdb249",
+   "patient_id": "mias-p125",
+   "label": 1
+  },
+  {
+   "opaque_id": "bf7bb9981614226f",
+   "case_id": "mias-mdb251",
+   "patient_id": "mias-p126",
+   "label": 0
+  },
+  {
+   "opaque_id": "bfa371b3ba205041",
+   "case_id": "mias-mdb261",
+   "patient_id": "mias-p131",
+   "label": 0
+  },
+  {
+   "opaque_id": "bfefee71fc0c284d",
+   "case_id": "mias-mdb240",
+   "patient_id": "mias-p120",
+   "label": 0
+  },
+  {
+   "opaque_id": "c0b4ed94eea3b073",
+   "case_id": "mias-mdb309",
+   "patient_id": "mias-p155",
+   "label": 0
+  },
+  {
+   "opaque_id": "c18190ffbe7382ac",
+   "case_id": "mias-mdb163",
+   "patient_id": "mias-p082",
+   "label": 0
+  },
+  {
+   "opaque_id": "c2f3387d1ad81ed1",
+   "case_id": "mias-mdb255",
+   "patient_id": "mias-p128",
+   "label": 0
+  },
+  {
+   "opaque_id": "c30fb76829cefe7f",
+   "case_id": "mias-mdb080",
+   "patient_id": "mias-p040",
+   "label": 0
+  },
+  {
+   "opaque_id": "c4ddf150b0445a09",
+   "case_id": "mias-mdb252",
+   "patient_id": "mias-p126",
+   "label": 0
+  },
+  {
+   "opaque_id": "c672285d8853c2b2",
+   "case_id": "mias-mdb299",
+   "patient_id": "mias-p150",
+   "label": 0
+  },
+  {
+   "opaque_id": "c6b46645e2c6d3db",
+   "case_id": "mias-mdb317",
+   "patient_id": "mias-p159",
+   "label": 0
+  },
+  {
+   "opaque_id": "c7635b817280e174",
+   "case_id": "mias-mdb302",
+   "patient_id": "mias-p151",
+   "label": 0
+  },
+  {
+   "opaque_id": "c7a954a6bff771f1",
+   "case_id": "mias-mdb201",
+   "patient_id": "mias-p101",
+   "label": 0
+  },
+  {
+   "opaque_id": "c84fad6a70c63859",
+   "case_id": "mias-mdb177",
+   "patient_id": "mias-p089",
+   "label": 0
+  },
+  {
+   "opaque_id": "c9c453eca05da93d",
+   "case_id": "mias-mdb225",
+   "patient_id": "mias-p113",
+   "label": 0
+  },
+  {
+   "opaque_id": "ca8257f02f5bca96",
+   "case_id": "mias-mdb241",
+   "patient_id": "mias-p121",
+   "label": 1
+  },
+  {
+   "opaque_id": "cb1b9244a5f6abb8",
+   "case_id": "mias-mdb220",
+   "patient_id": "mias-p110",
+   "label": 0
+  },
+  {
+   "opaque_id": "cb3c60e5a3cd2eb7",
+   "case_id": "mias-mdb310",
+   "patient_id": "mias-p155",
+   "label": 0
+  },
+  {
+   "opaque_id": "cc528b54e27fbdfa",
+   "case_id": "mias-mdb030",
+   "patient_id": "mias-p015",
+   "label": 0
+  },
+  {
+   "opaque_id": "cd403d3343eff169",
+   "case_id": "mias-mdb216",
+   "patient_id": "mias-p108",
+   "label": 1
+  },
+  {
+   "opaque_id": "ceab89902c36c433",
+   "case_id": "mias-mdb291",
+   "patient_id": "mias-p146",
+   "label": 0
+  },
+  {
+   "opaque_id": "cfa2399e8a0d2a43",
+   "case_id": "mias-mdb167",
+   "patient_id": "mias-p084",
+   "label": 0
+  },
+  {
+   "opaque_id": "d0c4df94758bf811",
+   "case_id": "mias-mdb053",
+   "patient_id": "mias-p027",
+   "label": 0
+  },
+  {
+   "opaque_id": "d1421a5f0562f404",
+   "case_id": "mias-mdb130",
+   "patient_id": "mias-p065",
+   "label": 1
+  },
+  {
+   "opaque_id": "d15a24719ae438c8",
+   "case_id": "mias-mdb094",
+   "patient_id": "mias-p047",
+   "label": 0
+  },
+  {
+   "opaque_id": "d1fe162c32b934e8",
+   "case_id": "mias-mdb043",
+   "patient_id": "mias-p022",
+   "label": 0
+  },
+  {
+   "opaque_id": "d3313976b1e10e45",
+   "case_id": "mias-mdb068",
+   "patient_id": "mias-p034",
+   "label": 0
+  },
+  {
+   "opaque_id": "d34d085ec6bcb0b6",
+   "case_id": "mias-mdb012",
+   "patient_id": "mias-p006",
+   "label": 0
+  },
+  {
+   "opaque_id": "d43d4a6330b63ec3",
+   "case_id": "mias-mdb238",
+   "patient_id": "mias-p119",
+   "label": 1
+  },
+  {
+   "opaque_id": "d5d29133e713895a",
+   "case_id": "mias-mdb058",
+   "patient_id": "mias-p029",
+   "label": 1
+  },
+  {
+   "opaque_id": "d6403d5bba3f84e8",
+   "case_id": "mias-mdb158",
+   "patient_id": "mias-p079",
+   "label": 1
+  },
+  {
+   "opaque_id": "d667397bb7ca541f",
+   "case_id": "mias-mdb247",
+   "patient_id": "mias-p124",
+   "label": 0
+  },
+  {
+   "opaque_id": "dae241c9f4b21437",
+   "case_id": "mias-mdb074",
+   "patient_id": "mias-p037",
+   "label": 0
+  },
+  {
+   "opaque_id": "db423ac42e3908d6",
+   "case_id": "mias-mdb025",
+   "patient_id": "mias-p013",
+   "label": 0
+  },
+  {
+   "opaque_id": "dc1504547120e24a",
+   "case_id": "mias-mdb002",
+   "patient_id": "mias-p001",
+   "label": 0
+  },
+  {
+   "opaque_id": "dd06fe73adef4f33",
+   "case_id": "mias-mdb202",
+   "patient_id": "mias-p101",
+   "label": 1
+  },
+  {
+   "opaque_id": "de6096f728383611",
+   "case_id": "mias-mdb208",
+   "patient_id": "mias-p104",
+   "label": 0
+  },
+  {
+   "opaque_id": "df36a5449fe7e062",
+   "case_id": "mias-mdb312",
+   "patient_id": "mias-p156",
+   "label": 0
+  },
+  {
+   "opaque_id": "df7a593706214b24",
+   "case_id": "mias-mdb283",
+   "patient_id": "mias-p142",
+   "label": 0
+  },
+  {
+   "opaque_id": "e01d2c3b7004c567",
+   "case_id": "mias-mdb037",
+   "patient_id": "mias-p019",
+   "label": 0
+  },
+  {
+   "opaque_id": "e024d5fc5dccea37",
+   "case_id": "mias-mdb318",
+   "patient_id": "mias-p159",
+   "label": 0
+  },
+  {
+   "opaque_id": "e0b76496325c5fdf",
+   "case_id": "mias-mdb097",
+   "patient_id": "mias-p049",
+   "label": 0
+  },
+  {
+   "opaque_id": "e0e5f21f4f125a92",
+   "case_id": "mias-mdb033",
+   "patient_id": "mias-p017",
+   "label": 0
+  },
+  {
+   "opaque_id": "e1110a9e635f47ba",
+   "case_id": "mias-mdb079",
+   "patient_id": "mias-p040",
+   "label": 0
+  },
+  {
+   "opaque_id": "e13222d3ed3e4008",
+   "case_id": "mias-mdb003",
+   "patient_id": "mias-p002",
+   "label": 0
+  },
+  {
+   "opaque_id": "e326899f89e24341",
+   "case_id": "mias-mdb042",
+   "patient_id": "mias-p021",
+   "label": 0
+  },
+  {
+   "opaque_id": "e341017c2424f86c",
+   "case_id": "mias-mdb085",
+   "patient_id": "mias-p043",
+   "label": 0
+  },
+  {
+   "opaque_id": "e46db75b4ea41225",
+   "case_id": "mias-mdb027",
+   "patient_id": "mias-p014",
+   "label": 0
+  },
+  {
+   "opaque_id": "e48a7862b055f208",
+   "case_id": "mias-mdb071",
+   "patient_id": "mias-p036",
+   "label": 0
+  },
+  {
+   "opaque_id": "e49f883c75ec92a6",
+   "case_id": "mias-mdb250",
+   "patient_id": "mias-p125",
+   "label": 0
+  },
+  {
+   "opaque_id": "e4d618b1e489ad10",
+   "case_id": "mias-mdb032",
+   "patient_id": "mias-p016",
+   "label": 0
+  },
+  {
+   "opaque_id": "e5bb40eb13d1dd56",
+   "case_id": "mias-mdb180",
+   "patient_id": "mias-p090",
+   "label": 0
+  },
+  {
+   "opaque_id": "e6e84f7602449fea",
+   "case_id": "mias-mdb166",
+   "patient_id": "mias-p083",
+   "label": 0
+  },
+  {
+   "opaque_id": "e7bb175b1e6a4530",
+   "case_id": "mias-mdb205",
+   "patient_id": "mias-p103",
+   "label": 0
+  },
+  {
+   "opaque_id": "e8431e4462823d72",
+   "case_id": "mias-mdb289",
+   "patient_id": "mias-p145",
+   "label": 0
+  },
+  {
+   "opaque_id": "e8460ee72142fd8d",
+   "case_id": "mias-mdb060",
+   "patient_id": "mias-p030",
+   "label": 0
+  },
+  {
+   "opaque_id": "e86c3e83f5b9c27b",
+   "case_id": "mias-mdb063",
+   "patient_id": "mias-p032",
+   "label": 0
+  },
+  {
+   "opaque_id": "e978e67c0028fb33",
+   "case_id": "mias-mdb005",
+   "patient_id": "mias-p003",
+   "label": 0
+  },
+  {
+   "opaque_id": "ea572cf8a2c4e4f5",
+   "case_id": "mias-mdb093",
+   "patient_id": "mias-p047",
+   "label": 0
+  },
+  {
+   "opaque_id": "eb733eb74c3e099f",
+   "case_id": "mias-mdb106",
+   "patient_id": "mias-p053",
+   "label": 0
+  },
+  {
+   "opaque_id": "ec44a84d9c43bcc7",
+   "case_id": "mias-mdb057",
+   "patient_id": "mias-p029",
+   "label": 0
+  },
+  {
+   "opaque_id": "ed0a96917b9bbfb0",
+   "case_id": "mias-mdb269",
+   "patient_id": "mias-p135",
+   "label": 0
+  },
+  {
+   "opaque_id": "eeb5aa9c1664f885",
+   "case_id": "mias-mdb187",
+   "patient_id": "mias-p094",
+   "label": 0
+  },
+  {
+   "opaque_id": "eff7850c88a5f752",
+   "case_id": "mias-mdb135",
+   "patient_id": "mias-p068",
+   "label": 0
+  },
+  {
+   "opaque_id": "f11e0718f11eb0ac",
+   "case_id": "mias-mdb233",
+   "patient_id": "mias-p117",
+   "label": 1
+  },
+  {
+   "opaque_id": "f24a1e04cbe7c143",
+   "case_id": "mias-mdb132",
+   "patient_id": "mias-p066",
+   "label": 0
+  },
+  {
+   "opaque_id": "f59bfeb202a164c6",
+   "case_id": "mias-mdb036",
+   "patient_id": "mias-p018",
+   "label": 0
+  },
+  {
+   "opaque_id": "f6a2be5af165f913",
+   "case_id": "mias-mdb197",
+   "patient_id": "mias-p099",
+   "label": 0
+  },
+  {
+   "opaque_id": "f6a3c290fd7dfe11",
+   "case_id": "mias-mdb245",
+   "patient_id": "mias-p123",
+   "label": 1
+  },
+  {
+   "opaque_id": "f6bbc7833db75a49",
+   "case_id": "mias-mdb151",
+   "patient_id": "mias-p076",
+   "label": 0
+  },
+  {
+   "opaque_id": "f6cca5e29f5b17ad",
+   "case_id": "mias-mdb224",
+   "patient_id": "mias-p112",
+   "label": 0
+  },
+  {
+   "opaque_id": "f892145507233f6d",
+   "case_id": "mias-mdb144",
+   "patient_id": "mias-p072",
+   "label": 1
+  },
+  {
+   "opaque_id": "f8e274be7528733c",
+   "case_id": "mias-mdb189",
+   "patient_id": "mias-p095",
+   "label": 0
+  },
+  {
+   "opaque_id": "f9864dfb62ad0e70",
+   "case_id": "mias-mdb195",
+   "patient_id": "mias-p098",
+   "label": 0
+  },
+  {
+   "opaque_id": "fab7dae7c24d2c18",
+   "case_id": "mias-mdb077",
+   "patient_id": "mias-p039",
+   "label": 0
+  },
+  {
+   "opaque_id": "faead5c04bb4e580",
+   "case_id": "mias-mdb119",
+   "patient_id": "mias-p060",
+   "label": 0
+  },
+  {
+   "opaque_id": "fd5df7ad5ae58f02",
+   "case_id": "mias-mdb059",
+   "patient_id": "mias-p030",
+   "label": 0
+  },
+  {
+   "opaque_id": "fde767ebde990f2b",
+   "case_id": "mias-mdb149",
+   "patient_id": "mias-p075",
+   "label": 0
+  },
+  {
+   "opaque_id": "ff83ba81f705f901",
+   "case_id": "mias-mdb045",
+   "patient_id": "mias-p023",
+   "label": 0
+  }
+ ]
+}

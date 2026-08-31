@@ -1,0 +1,27 @@
+{
+ "model": "finetune_v2",
+ "n": 322,
+ "prevalence": 0.16149068322981366,
+ "sandboxed": true,
+ "determinism_max_delta": 0.0,
+ "auroc": 0.7332621082621082,
+ "auroc_ci95": [
+  0.6457044519103303,
+  0.8136473974527303
+ ],
+ "sens_at_spec96": 0.4230769230769231,
+ "sens_at_spec96_ci95": [
+  0.24561403508771928,
+  0.5535782967032967
+ ],
+ "ece_adaptive": 0.485334291891627,
+ "coverage": 0.8478260869565217,
+ "auroc_nonabstained": 0.7555074373940878,
+ "headline": {
+  "auroc": 0.7332621082621082,
+  "sensitivity_at_specificity": 0.4230769230769231,
+  "ece_adaptive": 0.485334291891627,
+  "n_cases": 322.0,
+  "queries_remaining": 18.0
+ }
+}

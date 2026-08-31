@@ -1,0 +1,2 @@
+{"ts": "2026-08-31T08:31:49.370652+00:00", "caller": "bench:baseline_v1", "gold_version": "v1"}
+{"ts": "2026-08-31T08:32:06.887762+00:00", "caller": "bench:finetune_v2", "gold_version": "v1"}

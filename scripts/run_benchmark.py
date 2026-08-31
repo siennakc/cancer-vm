@@ -29,7 +29,7 @@ def main() -> None:
     os.environ.setdefault("BENCH_REPO_ROOT", str(Path.cwd()))
 
     result = run_hermetic(BENCH, "bench/adapters/oncoscope_adapter.py",
-                          python=str(Path(".venv/bin/python").resolve()))
+                          python=str(Path.cwd() / ".venv/bin/python"))
     gold = verify_bench(BENCH)
     rows = gold["rows"]
     y = np.array([r["label"] for r in rows], dtype=np.float64)

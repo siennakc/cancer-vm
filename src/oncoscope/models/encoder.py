@@ -90,8 +90,11 @@ class FrozenEncoder:
             torch.device("mps") if torch.backends.mps.is_available()
             else torch.device("cpu")
         )
+        # With a local checkpoint, never touch the torchvision hub — the
+        # hermetic benchmark denies network, and offline loads must stay offline.
         net = torchvision.models.resnet50(
-            weights=torchvision.models.ResNet50_Weights.IMAGENET1K_V2
+            weights=None if self.weights_path is not None
+            else torchvision.models.ResNet50_Weights.IMAGENET1K_V2
         )
         if self.weights_path is not None:
             state = torch.load(self.weights_path, map_location="cpu",

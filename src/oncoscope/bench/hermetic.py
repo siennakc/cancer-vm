@@ -53,7 +53,12 @@ def build_bench(cases, pixels_fn, out_dir: Path | str, version: str) -> dict:
     """
     out_dir = Path(out_dir)
     (out_dir / "cases").mkdir(parents=True, exist_ok=True)
-    salt = secrets.token_hex(16)
+    # Reuse the sealed salt on rebuild so a fresh clone regenerates the exact
+    # staged arrays and ids the committed seal was computed over (images are
+    # never committed — the MIAS licence is research-use, no redistribution).
+    gold_path = out_dir / "gold.json"
+    salt = (json.loads(gold_path.read_text())["salt"] if gold_path.exists()
+            else secrets.token_hex(16))
 
     gold_rows, id_map = [], {}
     for case in cases:
@@ -164,8 +169,11 @@ def _run_adapter_once(adapter: Path, staged: Path, order: list[str],
         print("[bench] WARNING: sandbox-exec unavailable — network NOT blocked",
               file=sys.stderr, flush=True)
 
+    repo_root = os.environ.get("BENCH_REPO_ROOT", os.getcwd())
     env = {"PATH": "/usr/bin:/bin", "HOME": str(staged),
-           "PYTHONPATH": os.environ.get("PYTHONPATH", "src"),
+           "PYTHONPATH": str(Path(repo_root) / "src"),
+           "BENCH_REPO_ROOT": repo_root,
+           "BENCH_MODEL": os.environ.get("BENCH_MODEL", "finetune_v2"),
            "BENCH_HERMETIC": "1"}
     proc = subprocess.run(cmd, env=env, cwd=staged, timeout=timeout_s,
                           capture_output=True, text=True)

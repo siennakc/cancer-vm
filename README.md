@@ -84,6 +84,18 @@ To use the LLM adjudicator instead of the rule-based one, install the agent extr
 - Abstention is a first-class output; deferral ships evidence, not a bare flag (A13).
 - The harness can never write its own gates — self-improving, never self-certifying.
 
+## Results so far
+
+| model | internal sealed test (n=1,002) | external MIAS bench (n=322) |
+|---|---|---|
+| baseline_v1 — frozen IN1K ResNet-50 | AUROC 0.707 · sens@96 0.179 | AUROC **0.504** (chance) |
+| finetune_v2 — fine-tuned encoder | AUROC **0.8165** · sens@96 0.337 | AUROC **0.733** · sens@96 0.423 |
+
+The external column is the honest one: the frozen baseline's internal score was
+substantially shortcut (site prevalence), and calibration does not survive the
+domain shift (v2 external ECE 0.485 — refit per site before quoting any
+probability). Details: `results/*/CARD.md`; weights: release `weights-v2`.
+
 ## Status
 
 **The harness (Phases 0–4) is complete** and tested end-to-end on phantoms

@@ -1,0 +1,27 @@
+{
+ "model": "baseline_v1",
+ "n": 322,
+ "prevalence": 0.16149068322981366,
+ "sandboxed": true,
+ "determinism_max_delta": 1.1102230246251565e-16,
+ "auroc": 0.5037749287749288,
+ "auroc_ci95": [
+  0.4219423767857438,
+  0.5863813848662509
+ ],
+ "sens_at_spec96": 0.038461538461538464,
+ "sens_at_spec96_ci95": [
+  0.0,
+  0.09433962264150944
+ ],
+ "ece_adaptive": 0.2317443128765463,
+ "coverage": 0.8757763975155279,
+ "auroc_nonabstained": 0.48739495798319327,
+ "headline": {
+  "auroc": 0.5037749287749288,
+  "sensitivity_at_specificity": 0.038461538461538464,
+  "ece_adaptive": 0.2317443128765463,
+  "n_cases": 322.0,
+  "queries_remaining": 19.0
+ }
+}

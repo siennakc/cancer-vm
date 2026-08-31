@@ -58,3 +58,16 @@ test sets (pitfall register: "PPV from an enriched test set").
   unattended, credential-free script. It remains the natural third site once
   someone with an account accepts the terms.
 - **VinDr-Mammo**, **EMBED** — credentialed / application-gated.
+
+## MIAS MiniMammographic Database — external benchmark only, site `mias`
+
+- **Source:** Mammographic Image Analysis Society, via the Internet Archive's
+  copy of the official distribution (`all-mias.tar.gz`, peipa.essex.ac.uk,
+  Dec 2012; Apollo/Cambridge mirror was 500ing at fetch time).
+- **Licence:** research use only; no redistribution (images are git-ignored;
+  only the seal, gold labels, and results are committed). Cite: Suckling et al.,
+  "The Mammographic Image Analysis Society digital mammogram database" (1994).
+- **Used here:** all 322 images as a sealed external benchmark. Never used for
+  training, calibration, thresholds, or model selection — enforced by byte-hash
+  and near-duplicate leakage gates at build and at every run.
+- **Label caveat:** MIAS severity mixes biopsy-proven and expert consensus.

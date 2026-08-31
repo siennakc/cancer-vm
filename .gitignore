@@ -40,3 +40,5 @@ data/processed/*
 data/metadata/*_series.json
 !data/processed/duplicates_audit_v1.json
 data/cache/
+data/bench/*/cases/
+data/raw/MIAS/
