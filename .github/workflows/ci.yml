@@ -16,5 +16,4 @@ jobs:
         run: pip install -e '.[dev]'
       - name: Test (includes leakage audit, gate, determinism, phantom e2e)
         run: python -m pytest
-      - name: Gates are tracked and unmodified by tests
-        run: git diff --exit-code gates/
+

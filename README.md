@@ -1,5 +1,11 @@
 # Oncoscope
 
+> **The harness now lives in its own repo:
+> [siennakc/Onco-Harness](https://github.com/siennakc/Onco-Harness)** (package
+> `oncoharness`; extracted at `4ce701d`). This repo is the **model & data
+> lane**: ingestion, trained encoders, sealed internal test, external
+> benchmark. Serving plugs the harness back in via the `harness` extra.
+
 An LLM harness that orchestrates vision models to detect cancer in medical images —
 wrapped in a gated self-improvement loop designed to get measurably better every
 cycle **without fooling itself**.

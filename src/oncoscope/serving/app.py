@@ -17,10 +17,17 @@ except ImportError as exc:  # pragma: no cover
     raise RuntimeError("install serving extras: pip install -e '.[serving]'") from exc
 
 from ..data.dicom_canonical import load_canonical
-from ..harness.ledger import EvidenceLedger
-from ..harness.state_machine import HarnessPipeline
-from ..harness.store import ArtifactStore
-from ..harness.tools import Toolbelt
+
+try:
+    from oncoharness.ledger import EvidenceLedger
+    from oncoharness.state_machine import HarnessPipeline
+    from oncoharness.store import ArtifactStore
+    from oncoharness.tools import Toolbelt
+except ImportError as exc:  # pragma: no cover
+    raise RuntimeError(
+        "the harness moved to its own package: "
+        "pip install 'oncoharness @ git+https://github.com/siennakc/Onco-Harness'"
+    ) from exc
 
 app = FastAPI(title="oncoscope", version="0.1.0")
 

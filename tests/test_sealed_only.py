@@ -1,13 +1,10 @@
-"""Sealed test set accounting (T-1.3) and the promotion gate (T-3.1)."""
+"""Sealed test set accounting (T-1.3). Gate tests moved to Onco-Harness."""
 
 import numpy as np
 import pytest
-import yaml
 
-from oncoscope.eval.gate import run_gate
 from oncoscope.eval.sealed import QueryBudgetExhausted, SealedTestSet
 
-RULES = yaml.safe_load(open("gates/gate_rules.yaml"))
 
 
 def _sealed(tmp_path, budget=3):
@@ -60,28 +57,3 @@ def _cohort(n=1200, seed=0):
     return y, good, pids, sites
 
 
-def test_gate_passes_equivalent_candidate():
-    y, scores, pids, sites = _cohort()
-    result = run_gate(
-        RULES, y, scores, champion_scores=scores.copy(), patient_ids=pids,
-        subgroups={"site": sites}, candidate_scores_rerun=scores.copy(),
-    )
-    assert result.passed, result.summary()
-
-
-def test_gate_fails_degraded_candidate():
-    y, good, pids, sites = _cohort()
-    rng = np.random.default_rng(1)
-    degraded = np.clip(good + rng.normal(0, 0.35, len(good)), 0, 1)  # much noisier
-    result = run_gate(RULES, y, degraded, champion_scores=good, patient_ids=pids)
-    assert not result.passed
-
-
-def test_gate_fails_nondeterministic_candidate():
-    y, scores, pids, _ = _cohort()
-    jittered = scores + 1e-3
-    result = run_gate(
-        RULES, y, scores, champion_scores=scores.copy(), patient_ids=pids,
-        candidate_scores_rerun=jittered,
-    )
-    assert any(c.name == "determinism_double_run" and not c.passed for c in result.checks)

@@ -37,7 +37,6 @@ from oncoscope.data.splits import load_manifest
 from oncoscope.eval.metrics import auroc
 
 CACHE = Path("data/cache/render448")
-RUN = Path("runs/finetune_v2")
 MEAN, STD = 0.449, 0.226  # ImageNet grayscale-equivalent
 
 
@@ -88,15 +87,19 @@ def main():
     ap.add_argument("--batch", type=int, default=16)
     ap.add_argument("--lr", type=float, default=1e-4)
     ap.add_argument("--resume", type=str, default=None)
+    ap.add_argument("--splits", type=str, default="data/processed/splits_v1.json")
+    ap.add_argument("--run", type=str, default="runs/finetune_v2")
     args = ap.parse_args()
 
+    global RUN
+    RUN = Path(args.run)
     torch.manual_seed(0)
     np.random.seed(0)
     device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
     RUN.mkdir(parents=True, exist_ok=True)
 
     cases = read_case_table("data/processed/cases_v1.jsonl")
-    splits = load_manifest("data/processed/splits_v1.json")
+    splits = load_manifest(args.splits)
     of = lambda c: splits.split_of(f"{c.site}/{c.patient_id}")
     tr = [c for c in cases if of(c) == "train"]
     cal = [c for c in cases if of(c) == "calibration"]
