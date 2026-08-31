@@ -12,6 +12,19 @@ own second detector family (DoG) per axioms A4/A5. Cost columns are reported
 beside accuracy — the harness must pay for what it buys.
 
 Same 709 quarantined benchmark images, same metrics, paired delta CI.
+
+Fairness contract (revised 2026-08-31): **both arms see native-resolution
+pixels.** The first recorded run (delta -0.071) pre-shrank Arm B's input to
+max side 1600 while Arm A's cached embeddings came from native DICOMs. The
+shrink docstring claimed the letterbox made this lossless; that is true for
+the whole-image window and FALSE for every sub-window — a 0.62-scale quadrant
+of a 1600px image is ~992px and gets UPSAMPLED into the encoder, where the
+same quadrant of a native image carries real detail. It also quietly nullified
+the zoom re-verify stage, whose entire premise (axiom A1) is re-examining
+candidates at native resolution. Some unknown share of the recorded -0.071 is
+that handicap. ``--shrink N`` remains available as an explicit, recorded
+speed knob for smoke runs; headline numbers must come from ``--shrink 0``
+(the default), and the report JSON records which one ran.
 """
 
 from __future__ import annotations
@@ -38,12 +51,14 @@ from oncoscope.models.encoder import FrozenEncoder
 from oncoscope.models.head import LogisticHead
 
 
-def _shrink(pixels: np.ndarray, max_side: int = 1600) -> np.ndarray:
-    """Pre-resize native 3-5k px DICOMs. The v4 encoder letterboxes every crop
-    to 1152x896 regardless, so this loses nothing while cutting the per-window
-    CPU preprocessing that dominated wall time."""
+def _shrink(pixels: np.ndarray, max_side: int) -> np.ndarray:
+    """OPTIONAL pre-resize, off by default — see the fairness contract above.
+
+    Not harmless: sub-windows and zoom crops of a shrunk image reach the
+    encoder upsampled. Use only for smoke runs, never for reported numbers.
+    """
     h, w = pixels.shape
-    if max(h, w) <= max_side:
+    if max_side <= 0 or max(h, w) <= max_side:
         return pixels
     import torch
     import torch.nn.functional as F
@@ -92,7 +107,14 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--out", default="results/ab_harness/report.json")
+    ap.add_argument("--shrink", type=int, default=0,
+                    help="max side for Arm B input; 0 (default) = native, the only "
+                         "fair setting — nonzero is a smoke-run speed knob and is "
+                         "recorded in the report")
     args = ap.parse_args()
+    if args.shrink:
+        print(f"[ab] WARNING: --shrink {args.shrink} handicaps Arm B; "
+              "this run's numbers are not comparable to Arm A", flush=True)
 
     cases = read_case_table("data/processed/cases_v1.jsonl")
     splits = load_manifest("data/processed/splits_v2.json")
@@ -125,7 +147,8 @@ def main():
     scores_b, decisions, tool_calls, wall = [], [], [], []
     t0 = time.time()
     for i, c in enumerate(bench, 1):
-        px = _shrink(load_canonical(Path("data/raw") / c.dicom_path).pixels)
+        px = _shrink(load_canonical(Path("data/raw") / c.dicom_path).pixels,
+                     args.shrink)
         t1 = time.time()
         report = pipeline.run_case(c.case_id, px)
         wall.append((time.time() - t1) * 1000)
@@ -148,9 +171,30 @@ def main():
 
     delta = paired_bootstrap_delta_ci(y, scores_b, scores_a, pids, auroc,
                                       iterations=2000)
+
+    # Deferral informativeness, computed here so the CARD's analysis is
+    # reproducible from the report alone: if Arm A performs the same on the
+    # cases Arm B deferred as on the ones it answered, the deferrals bought
+    # nothing (they were not selecting hard cases).
+    deferred = np.array([d.endswith("defer_to_human") for d in decisions])
+    def _subset(mask):
+        if mask.sum() == 0 or len(set(y[mask])) < 2:
+            return {"n": int(mask.sum()), "auroc_arm_a": None}
+        return {"n": int(mask.sum()),
+                "auroc_arm_a": round(auroc(y[mask], scores_a[mask]), 4),
+                "mean_abs_error_arm_a": round(
+                    float(np.mean(np.abs(scores_a[mask] - y[mask]))), 4)}
+    deferral_analysis = {
+        "deferred": _subset(deferred),
+        "answered": _subset(~deferred),
+        "deferral_rate": round(float(deferred.mean()), 4),
+    }
+
     out = {
         "benchmark": "CBIS-DDSM official test split",
         "n": len(bench),
+        "arm_b_input_max_side": args.shrink or "native",
+        "fair_comparison": not bool(args.shrink),
         "arm_a_model_alone": block(scores_a),
         "arm_b_harness_rule_adjudicated": {
             **block(scores_b),
@@ -163,6 +207,7 @@ def main():
             "point": round(delta[0], 4),
             "ci95": [round(delta[1], 4), round(delta[2], 4)],
         },
+        "deferral_analysis": deferral_analysis,
     }
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).write_text(json.dumps(out, indent=1))

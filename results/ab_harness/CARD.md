@@ -57,3 +57,20 @@ calibration scores. The ablation runner exists to catch exactly this
 
 Reproduce: `scripts/ab_harness_bench.py` (full run ≈ 50 min on an M4 Max);
 raw report `report.json`; per-case decisions in the run's hash-chained ledger.
+
+## Post-audit correction (2026-08-31): this run handicapped Arm B
+
+This run pre-shrank Arm B's input to max side 1600 px while Arm A's cached
+embeddings came from native 3–5k px DICOMs. The shrink's rationale ("the
+letterbox makes it lossless") holds for the whole-image window and fails for
+every sub-window — a 0.62-scale quadrant of a 1600 px image reaches the
+encoder *upsampled* (~992 px → 1152×896) where the native quadrant would
+carry real detail — and it nullified the zoom re-verify stage, whose premise
+is native-resolution re-examination (axiom A1). **An unknown share of the
+−0.071 is this handicap, so treat the magnitude as soft; the sign and
+significance may still hold but must be re-established.** The script now
+defaults to native input (`--shrink 0`), records the setting in the report
+(`arm_b_input_max_side`, `fair_comparison`), and computes the deferral
+analysis in-script so it is reproducible. Re-run before quoting any harness
+A/B number, ideally together with the patch-detector proposer (item 1 above).
+Expect roughly 2–4× the wall time at native resolution.

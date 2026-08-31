@@ -159,4 +159,7 @@ Full intervention-by-intervention ledger (what made it better, what didn't): `TR
 rule-adjudicated harness 0.700 (paired Δ −0.071 [−0.099, −0.044], 29 tool
 calls/case, 41% uninformative deferrals) — the honest current answer to
 "does the harness help?" is **not yet, and the measurement says exactly why**:
-`results/ab_harness/CARD.md`.
+`results/ab_harness/CARD.md`. Caveat discovered post-hoc: that run pre-shrank
+the harness arm's input to 1600 px while the model arm saw native pixels, so
+the *magnitude* of the loss is soft (sign and significance need re-running;
+the script now defaults to a fair native-input comparison).
