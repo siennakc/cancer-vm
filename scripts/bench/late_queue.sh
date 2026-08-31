@@ -1,7 +1,7 @@
 #!/bin/bash
 # Chained behind the night queue: harness v2 A/B, then C16 train-slide npz re-run.
 set -e
-cd "/Users/mike/cancer model"
+cd "${ONCOSCOPE_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
 while ! grep -q NIGHT-QUEUE-DONE runs/night_queue.log 2>/dev/null; do sleep 120; done
 echo "=== HARNESS V2 ==="
 .venv/bin/python scripts/bench/harness_v2.py

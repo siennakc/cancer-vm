@@ -1,7 +1,7 @@
 #!/bin/bash
 # Wait for validation -> pick aggregation on TRAIN slides -> launch full official test.
 set -e
-cd "/Users/mike/cancer model"
+cd "${ONCOSCOPE_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
 while pgrep -f "infer_c16_slide.*c16_val" > /dev/null; do sleep 60; done
 .venv/bin/python - <<'PY'
 import json, glob
