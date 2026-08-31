@@ -100,5 +100,10 @@
     0.6777
    ]
   }
- ]
+ ],
+ "notes": {
+  "density_grid_coverage": "density=* slices cover mass cases only (n=386 of 709): build_cbis_cases read the mass CSVs' 'breast_density' spelling but not the calc CSVs' 'breast density', so every calcification case carried density_band=null when this grid was computed. The parser and cases_v1.jsonl are fixed (scripts/backfill_density_v1.py); these density rows are stale until eval_public_cbis.py is re-run. abnormality=* and view=* slices are unaffected and cover all 709.",
+  "density_slice_n_total": 386,
+  "benchmark_n": 709
+ }
 }

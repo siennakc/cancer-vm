@@ -9,12 +9,44 @@ floors, calibration ceiling, negative-flip, determinism — decides promotion.
 The gate's verdict is the output either way; the loop is self-improving,
 never self-certifying.
 """
-import json, sys
+import json, os, sys
 from pathlib import Path
 import numpy as np
 sys.path.insert(0, "src")
 import torch
 from oncoharness.gate import load_rules, run_gate
+
+
+def resolve_gate_rules() -> Path:
+    """Locate the Onco-Harness gate rules, or refuse to run.
+
+    The rules live in the harness repo (``gates/gate_rules.yaml``), outside
+    this repo and outside the harness Python package, precisely so the thing
+    being judged cannot edit its own judge. There is deliberately no fallback
+    to a local copy: a silently-substituted rules file would let a candidate
+    be promoted under rules it chose, which is the one failure mode this whole
+    design exists to prevent.
+
+    Order: ``--gate-rules PATH`` > ``$ONCOSCOPE_GATE_RULES`` > sibling checkout.
+    """
+    candidates: list[Path] = []
+    if "--gate-rules" in sys.argv:
+        candidates.append(Path(sys.argv[sys.argv.index("--gate-rules") + 1]))
+    if os.environ.get("ONCOSCOPE_GATE_RULES"):
+        candidates.append(Path(os.environ["ONCOSCOPE_GATE_RULES"]))
+    candidates.append(Path(__file__).resolve().parents[2] / "Onco-Harness/gates/gate_rules.yaml")
+
+    for path in candidates:
+        if path.is_file():
+            return path
+    raise SystemExit(
+        "gate rules not found. The RSI cycle scores candidates against the\n"
+        "Onco-Harness gate, which is not vendored here on purpose.\n"
+        "  git clone https://github.com/siennakc/Onco-Harness  # as a sibling dir\n"
+        "or point at an existing checkout:\n"
+        "  ONCOSCOPE_GATE_RULES=/path/to/Onco-Harness/gates/gate_rules.yaml\n"
+        f"tried: {', '.join(str(c) for c in candidates)}"
+    )
 from oncoscope.data.mammography import read_case_table
 from oncoscope.data.splits import load_manifest
 from oncoscope.eval.metrics import auroc, sensitivity_at_specificity
@@ -62,7 +94,9 @@ for attr in ("site", "density"):
             print(f"[rsi]   {attr}={lvl:4} n={m.sum():3}  champ {auroc(thr['y'][m], s_champ[m]):.3f}"
                   f"  cand {auroc(thr['y'][m], s_cand[m]):.3f}", flush=True)
 
-rules = load_rules("/Users/mike/onco-harness/gates/gate_rules.yaml")
+gate_rules_path = resolve_gate_rules()
+print(f"[rsi] gate rules: {gate_rules_path}", flush=True)
+rules = load_rules(gate_rules_path)
 result = run_gate(
     rules, thr["y"], s_cand, s_champ, thr["pid"],
     subgroups={"site": thr["site"], "density_band": thr["density"], "age_band": thr["age"]},

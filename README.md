@@ -23,21 +23,39 @@ Image-level malignant-vs-benign, AUROC with patient-clustered 95% CIs.
 | v3 fine-tuned, quarantined (`weights-v3`) | 0.742 [0.696–0.786] | 0.664 [0.58–0.74] | — |
 | **v4 + high-res post-train (`weights-v4`)** | **0.771 [0.726–0.815]** | **0.736 [0.66–0.81]** | — |
 
-¹ 709 images / 349 patients from the official mass+calc test CSVs; published
-whole-image results on this split run ≈0.75–0.88 — v4 is inside that range
-after ~80 min of laptop training (v3: 22 min at 448px sat just under it).
+¹ 709 images from the **349 patients** named in the official mass+calc test
+CSVs. That is a patient-complete *superset* of the official 645-image test
+split: 31 patients appear in both the official train and test CSVs, and
+quarantining them wholesale (64 extra images) is the stricter choice, but it
+means this set is composed slightly differently from the one published papers
+score. Published whole-image results on the official split run ≈0.75–0.88;
+v4 lands in that range after ~80 min of laptop training (v3: 22 min at 448px,
+just under it).
 ² 322 UK film-screen images (1994), never seen in any fitting stage. **Calibration
 does not survive this shift** (ECE 0.49): refit per site before quoting probabilities.
-³ Hash-sealed, query-budgeted internal split (n=1,002). v3 has not spent a query.
+³ Hash-sealed, query-budgeted internal split (n=1,002), defined against
+`splits_v1`. **v3/v4 are disqualified here, exactly as v2 is on the public
+benchmark**: `splits_v2` re-splits with a new seed, so 381 of the 499 sealed
+patients now sit in a v3/v4 fitting split. No query has been spent on them and
+none should be — the seal verifies membership, not split provenance, so this
+one is honour-system until that check exists.
 ⁴ v2 trained on 202 of the official test split's 349 patients (our patient-grouped
 splits predate the quarantine) — its internal/MIAS numbers stand, its official-split
 numbers would be leakage and are not reported.
 
 Subgroup slices (BenchX-style; v4, official split): mass 0.748 / calc **0.803** ·
-density a 0.926, b 0.771, **c 0.629**, d 0.777 · CC 0.786 / MLO 0.757.
-The resolution bump moved calcifications most (v3: 0.736 → 0.803) — exactly the
-microcalcification-detail mechanism the literature predicts. Density-c breasts
-remain the weak slice; `results/public_cbis/*.json` has the grid.
+CC 0.786 / MLO 0.757. The resolution bump moved calcifications most
+(v3: 0.736 → 0.803) — exactly the microcalcification-detail mechanism the
+literature predicts.
+
+Density slices — a 0.926, b 0.771, **c 0.629**, d 0.777 — **cover masses only
+(386 of 709)** and are stale: the case builder read the mass CSVs'
+`breast_density` column but not the calc CSVs' `breast density`, so every
+calcification case carried a null band when the grid was computed. Parser and
+case table are fixed; the grid needs `eval_public_cbis.py` re-run to cover all
+709. Read density-c with care either way: its CI **[0.470–0.768] contains 0.5**,
+so on masses in dense breasts this model is not distinguishable from chance.
+`results/public_cbis/*.json` has the grid and the coverage note.
 
 ## Get the model
 
@@ -112,7 +130,7 @@ python3.12 -m venv .venv && .venv/bin/pip install -e '.[dev]' pandas openpyxl
 .venv/bin/python scripts/cache_embeddings.py --tag resnet50_ft_v3_448_raw --weights runs/finetune_v3/best_model.pt --raw --gray-stats
 .venv/bin/python scripts/refit_heads_v3.py    # calibrated heads
 .venv/bin/python scripts/eval_public_cbis.py --tag resnet50_ft_v3_448_raw --head runs/finetune_v3_head/head.json --name finetune_v3
-.venv/bin/python -m pytest                    # 59 tests, no GPU needed
+.venv/bin/python -m pytest                    # 35 tests, no GPU needed
 ```
 
 ## Layout

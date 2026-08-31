@@ -38,6 +38,25 @@ _CBIS_BENIGN = {"BENIGN", "BENIGN_WITHOUT_CALLBACK"}
 
 _DENSITY_BAND = {1: "a", 2: "b", 3: "c", 4: "d"}
 
+# CBIS-DDSM spells the density column differently across its own CSVs: the mass
+# files use ``breast_density``, the calcification files ``breast density``.
+# Reading only the first silently drops the band for every calc case, which
+# turns any density-stratified analysis into a mass-only analysis without
+# saying so. Accept both spellings.
+_DENSITY_KEYS = ("breast_density", "breast density")
+
+
+def _read_density_band(row: dict) -> str | None:
+    for key in _DENSITY_KEYS:
+        raw = (row.get(key) or "").strip()
+        if not raw:
+            continue
+        try:
+            return _DENSITY_BAND.get(int(raw))
+        except ValueError:
+            return None
+    return None
+
 
 @dataclass(frozen=True)
 class MammoCase:
@@ -135,10 +154,7 @@ def build_cbis_cases(metadata_dir: Path | str, manifest_path: Path | str,
                     continue
                 seen.add(case_id)
 
-                try:
-                    density = _DENSITY_BAND.get(int(row.get("breast_density") or 0))
-                except ValueError:
-                    density = None
+                density = _read_density_band(row)
 
                 cases.append(MammoCase(
                     case_id=case_id,

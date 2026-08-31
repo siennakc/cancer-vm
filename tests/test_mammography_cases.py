@@ -154,3 +154,74 @@ def test_content_audit_twins_and_conflicts(tmp_path):
     # bystander untouched
     assert any(c.patient_id == "D1-0099" for c in clean)
     assert audit["n_kept"] == 2 and audit["n_dropped"] == 3
+
+
+# --- density column spelling (regression) ---------------------------------
+#
+# CBIS-DDSM spells the density column two different ways in its own CSVs:
+# ``breast_density`` in the mass files, ``breast density`` in the calc files.
+# Reading only the first silently nulls the band for all 1,501 calcification
+# cases, which quietly reduces every density-stratified result to a mass-only
+# analysis. These tests pin both spellings, and pin the real shipped headers so
+# a future CSV revision cannot reintroduce the bug unnoticed.
+
+CALC_CSV_HEADER = (
+    "patient_id,breast density,left or right breast,image view,abnormality id,"
+    "abnormality type,calc type,calc distribution,assessment,pathology,subtlety,"
+    "image file path,cropped image file path,ROI mask file path\n"
+)
+
+
+def test_reads_both_density_spellings():
+    from oncoscope.data.mammography import _read_density_band
+
+    assert _read_density_band({"breast_density": "3"}) == "c"
+    assert _read_density_band({"breast density": "3"}) == "c"
+    assert _read_density_band({"breast density": "1"}) == "a"
+    # Absent, blank, and out-of-range (BI-RADS density is 1-4) stay None
+    # rather than being guessed.
+    assert _read_density_band({}) is None
+    assert _read_density_band({"breast density": ""}) is None
+    assert _read_density_band({"breast density": "0"}) is None
+    assert _read_density_band({"breast_density": "junk"}) is None
+
+
+def test_calc_cases_get_a_density_band(tmp_path):
+    """A calcification CSV must yield a band, not a silent None."""
+    meta, raw = tmp_path / "metadata", tmp_path / "raw"
+    meta.mkdir()
+    uid = "uid-calc-1"
+    tcia_pid = "Calc-Training_P_00010_LEFT_CC"
+    path = f"{tcia_pid}/1.2.3.study/{uid}/000000.dcm"
+    (meta / "calc_case_description_train_set.csv").write_text(
+        CALC_CSV_HEADER
+        + f"P_00010,3,LEFT,CC,1,calcification,PLEOMORPHIC,CLUSTERED,4,MALIGNANT,4,"
+        f"{path},{path},{path}\n"
+    )
+    series = raw / "CBIS" / uid
+    series.mkdir(parents=True)
+    (series / "000000.dcm").write_bytes(b"stub")
+    manifest = tmp_path / "manifest.jsonl"
+    manifest.write_text(json.dumps({"series_uid": uid, "relpath": f"CBIS/{uid}"}) + "\n")
+
+    cases = build_cbis_cases(meta, manifest, raw)
+    assert len(cases) == 1
+    assert cases[0].abnormality == "calcification"
+    assert cases[0].density_band == "c", "calc density band was dropped"
+
+
+def test_shipped_csv_headers_still_carry_a_known_density_spelling():
+    """Guards against an upstream CSV revision renaming the column again."""
+    import csv
+    from pathlib import Path
+
+    from oncoscope.data.mammography import _DENSITY_KEYS
+
+    meta = Path("data/metadata")
+    csvs = sorted(meta.glob("*_case_description_*.csv"))
+    if not csvs:
+        pytest.skip("label CSVs not present")
+    for path in csvs:
+        with path.open(newline="") as fh:
+            fields = next(csv.reader(fh))
+        assert any(k in fields for k in _DENSITY_KEYS), f"{path.name}: no density column"
