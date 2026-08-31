@@ -1,0 +1,187 @@
+{
+ "n_input": 6845,
+ "n_kept": 6821,
+ "n_dropped": 24,
+ "merged_patient_groups": [
+  [
+   "cmmd/D1-0163",
+   "cmmd/D1-1648"
+  ],
+  [
+   "cmmd/D1-0163",
+   "cmmd/D1-1648"
+  ],
+  [
+   "cmmd/D1-0951",
+   "cmmd/D1-1034"
+  ],
+  [
+   "cmmd/D1-0951",
+   "cmmd/D1-1034"
+  ],
+  [
+   "ddsm/P_00121",
+   "ddsm/P_00157"
+  ],
+  [
+   "ddsm/P_01709",
+   "ddsm/P_01723"
+  ]
+ ],
+ "conflicted_patients_dropped": [
+  "cmmd/D1-0708",
+  "cmmd/D1-0771",
+  "cmmd/D2-0444",
+  "cmmd/D2-0680",
+  "ddsm/P_01319",
+  "ddsm/P_01321",
+  "ddsm/P_02559",
+  "ddsm/P_02563"
+ ],
+ "dropped": [
+  {
+   "case_id": "cmmd-1.3.6.1.4.1.14519.5.2.1.1239.1759.189758733538161691375615455627",
+   "patient": "cmmd/D1-0951",
+   "sha256": "c3bfcc6ff360fafcbef70eee90ce4dbc48c92e18b11b5831ba8d24e7ce73cbba",
+   "reason": "byte-duplicate copy"
+  },
+  {
+   "case_id": "cmmd-1.3.6.1.4.1.14519.5.2.1.1239.1759.249058567964490169638606776267",
+   "patient": "cmmd/D1-0708",
+   "sha256": "e3455ec07689302e97b6f745e8f86c8f868d697fe1833f36fd058193b52ce11d",
+   "reason": "conflicting-label duplicate group"
+  },
+  {
+   "case_id": "cmmd-1.3.6.1.4.1.14519.5.2.1.1239.1759.259652642023053124448713564017",
+   "patient": "cmmd/D1-0951",
+   "sha256": "c1c538b852b8b44a152550e317d67e48b2433cad85b7e829a6c56f888dd55cba",
+   "reason": "byte-duplicate copy"
+  },
+  {
+   "case_id": "cmmd-1.3.6.1.4.1.14519.5.2.1.1239.1759.270091456172700053198796062941",
+   "patient": "cmmd/D1-0163",
+   "sha256": "c4ddf3ba8277a73eaad643e83cc5d051eeedbbf5edeba89632ac29842f39e2f3",
+   "reason": "byte-duplicate copy"
+  },
+  {
+   "case_id": "cmmd-1.3.6.1.4.1.14519.5.2.1.1239.1759.322095421580947966359570435657",
+   "patient": "cmmd/D1-0163",
+   "sha256": "9a0c824ff4850447c7d453da03b67837a1d630fa67a397dd752f4c6ecb595b1c",
+   "reason": "byte-duplicate copy"
+  },
+  {
+   "case_id": "cmmd-1.3.6.1.4.1.14519.5.2.1.1239.1759.332131542146421806368855898573",
+   "patient": "cmmd/D1-0708",
+   "sha256": "9f78043d56f3e114ff9a3f8adb3b3bf2beeb64baa17d6024896a7aaaea260210",
+   "reason": "conflicting-label duplicate group"
+  },
+  {
+   "case_id": "cmmd-1.3.6.1.4.1.14519.5.2.1.1239.1759.335217229126169851675403047036",
+   "patient": "cmmd/D1-0771",
+   "sha256": "188ea98b9b9307d1d9982522051866f5577747e7bc542678142115acf52db1a6",
+   "reason": "conflicting-label duplicate group"
+  },
+  {
+   "case_id": "cmmd-1.3.6.1.4.1.14519.5.2.1.1239.1759.335217229126169851675403047036",
+   "patient": "cmmd/D2-0680",
+   "sha256": "188ea98b9b9307d1d9982522051866f5577747e7bc542678142115acf52db1a6",
+   "reason": "conflicting-label duplicate group"
+  },
+  {
+   "case_id": "cmmd-1.3.6.1.4.1.14519.5.2.1.1239.1759.639358879296903357940063732114",
+   "patient": "cmmd/D1-0708",
+   "sha256": "23e7b6c5a71dc4e1d9db3182bd3fdd2ddbcecdd89fe15a9ae673700bc0b13713",
+   "reason": "conflicting-label duplicate group"
+  },
+  {
+   "case_id": "cmmd-1.3.6.1.4.1.14519.5.2.1.1239.1759.639358879296903357940063732114",
+   "patient": "cmmd/D2-0444",
+   "sha256": "23e7b6c5a71dc4e1d9db3182bd3fdd2ddbcecdd89fe15a9ae673700bc0b13713",
+   "reason": "conflicting-label duplicate group"
+  },
+  {
+   "case_id": "cmmd-1.3.6.1.4.1.14519.5.2.1.1239.1759.688434619101095199638164295925",
+   "patient": "cmmd/D1-0708",
+   "sha256": "236045254bb6c1baf7049c854344029208d482fff22eb0f8e7bee26b85839eee",
+   "reason": "conflicting-label duplicate group"
+  },
+  {
+   "case_id": "cmmd-1.3.6.1.4.1.14519.5.2.1.1239.1759.688434619101095199638164295925",
+   "patient": "cmmd/D2-0444",
+   "sha256": "236045254bb6c1baf7049c854344029208d482fff22eb0f8e7bee26b85839eee",
+   "reason": "conflicting-label duplicate group"
+  },
+  {
+   "case_id": "cmmd-1.3.6.1.4.1.14519.5.2.1.1239.1759.757402976318039098038276163142",
+   "patient": "cmmd/D1-0771",
+   "sha256": "bc4705aeef197c9e2f4f024e631d42a25337690325c2c2c7b68cf807a26db7dd",
+   "reason": "conflicting-label duplicate group"
+  },
+  {
+   "case_id": "cmmd-1.3.6.1.4.1.14519.5.2.1.1239.1759.757402976318039098038276163142",
+   "patient": "cmmd/D2-0680",
+   "sha256": "bc4705aeef197c9e2f4f024e631d42a25337690325c2c2c7b68cf807a26db7dd",
+   "reason": "conflicting-label duplicate group"
+  },
+  {
+   "case_id": "ddsm-1.3.6.1.4.1.9590.100.1.2.141379766611952338808867370720222758318",
+   "patient": "ddsm/P_02563",
+   "sha256": "ce03f813aeb3101ed93114fe54d9debe9c8847ad5430d6bb601912d839a32794",
+   "reason": "conflicting-label duplicate group"
+  },
+  {
+   "case_id": "ddsm-1.3.6.1.4.1.9590.100.1.2.148920323810559075320708486680666301087",
+   "patient": "ddsm/P_02563",
+   "sha256": "7887937bc4d01688bd9704917bb8abc146ef8532445114b9c5540506139f18fe",
+   "reason": "conflicting-label duplicate group"
+  },
+  {
+   "case_id": "ddsm-1.3.6.1.4.1.9590.100.1.2.241020638813027313501928349840148500619",
+   "patient": "ddsm/P_01321",
+   "sha256": "6b9b72fe7337ef77124438e4ecf192fa69f2f0c8be9a6b06b8a70dda5942136f",
+   "reason": "conflicting-label duplicate group"
+  },
+  {
+   "case_id": "ddsm-1.3.6.1.4.1.9590.100.1.2.306442879812021178640314674451297223410",
+   "patient": "ddsm/P_01321",
+   "sha256": "666f83dbf527a54b6c1efc77932a719029089cd1b0ad791a854f181ad58921ec",
+   "reason": "conflicting-label duplicate group"
+  },
+  {
+   "case_id": "ddsm-1.3.6.1.4.1.9590.100.1.2.327261889611833044623682994470841880136",
+   "patient": "ddsm/P_02559",
+   "sha256": "7887937bc4d01688bd9704917bb8abc146ef8532445114b9c5540506139f18fe",
+   "reason": "conflicting-label duplicate group"
+  },
+  {
+   "case_id": "ddsm-1.3.6.1.4.1.9590.100.1.2.346281440912431381827919607274014474106",
+   "patient": "ddsm/P_00157",
+   "sha256": "83866234f989319b50047b20add80476c65f19f0de6b73e99d43f8d8f60db625",
+   "reason": "byte-duplicate copy"
+  },
+  {
+   "case_id": "ddsm-1.3.6.1.4.1.9590.100.1.2.381801591411570664022491472961274292215",
+   "patient": "ddsm/P_01319",
+   "sha256": "6b9b72fe7337ef77124438e4ecf192fa69f2f0c8be9a6b06b8a70dda5942136f",
+   "reason": "conflicting-label duplicate group"
+  },
+  {
+   "case_id": "ddsm-1.3.6.1.4.1.9590.100.1.2.398510539611405601424632149780227498840",
+   "patient": "ddsm/P_02559",
+   "sha256": "7298ad15b684d8a709888f04c7a6edd8d9106c0831b8b17d03ce52a3559ec84a",
+   "reason": "conflicting-label duplicate group"
+  },
+  {
+   "case_id": "ddsm-1.3.6.1.4.1.9590.100.1.2.404370462311587751841153329983150629885",
+   "patient": "ddsm/P_01319",
+   "sha256": "cfe8947e513b5ef7de7eb3bceafad748693d1e37eaf97038e46e762572558863",
+   "reason": "conflicting-label duplicate group"
+  },
+  {
+   "case_id": "ddsm-1.3.6.1.4.1.9590.100.1.2.83484406312435716425859841391224840751",
+   "patient": "ddsm/P_01723",
+   "sha256": "b32f4fef957a96b625af303f91ce27aad1c09eb1ff7b0f5d46324c7009eb1c9a",
+   "reason": "byte-duplicate copy"
+  }
+ ]
+}

@@ -24,6 +24,7 @@ Pixels are never loaded here; a case carries a path, and
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 import re
 from dataclasses import asdict, dataclass
@@ -225,3 +226,94 @@ def write_case_table(cases: list[MammoCase], path: Path | str) -> Path:
 def read_case_table(path: Path | str) -> list[MammoCase]:
     return [MammoCase(**json.loads(line))
             for line in Path(path).read_text().splitlines() if line.strip()]
+
+
+# --- content-hash audit (CMMD ships byte-identical files under different patients) ---
+
+def _sha256_file(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def content_audit(cases: list[MammoCase], raw_root: Path | str) -> tuple[list[MammoCase], dict]:
+    """Byte-level duplicate audit and repair. Returns (clean_cases, audit_record).
+
+    CMMD enrolls some women twice under different patient IDs, with byte-identical
+    DICOMs — including two pairs whose labels *contradict* each other. Policy:
+
+    - duplicate group, consistent labels  -> merge the patients into one split
+      group (alias root = lexicographic min), keep one copy of each image
+    - duplicate group, conflicting labels -> drop every image of every patient
+      involved: the enrollment record itself is untrustworthy
+    - CMMD case ids become content-addressed (``cmmd-<sha256[:16]>``) so identical
+      bytes can never be two cases again
+
+    Grouped splits alone cannot see these twins — that is the point of the audit.
+    """
+    raw_root = Path(raw_root)
+    by_hash: dict[str, list[int]] = {}
+    hashes: list[str] = []
+    for i, case in enumerate(cases):
+        digest = _sha256_file(raw_root / case.dicom_path)
+        hashes.append(digest)
+        by_hash.setdefault(digest, []).append(i)
+
+    # union-find over patients that share any byte-identical image
+    parent: dict[str, str] = {}
+
+    def find(x: str) -> str:
+        parent.setdefault(x, x)
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    def union(a: str, b: str) -> None:
+        ra, rb = find(a), find(b)
+        if ra != rb:
+            lo, hi = sorted((ra, rb))
+            parent[hi] = lo
+
+    conflicted_patients: set[str] = set()
+    merged_groups: list[list[str]] = []
+    for digest, idxs in by_hash.items():
+        if len(idxs) < 2:
+            continue
+        group = [cases[i] for i in idxs]
+        pkeys = sorted({f"{c.site}/{c.patient_id}" for c in group})
+        if len({c.label for c in group}) > 1:
+            conflicted_patients.update(pkeys)
+        elif len(pkeys) > 1:
+            for k in pkeys[1:]:
+                union(pkeys[0], k)
+            merged_groups.append(pkeys)
+
+    clean: list[MammoCase] = []
+    dropped: list[dict] = []
+    seen_hash: set[str] = set()
+    for case, digest in zip(cases, hashes):
+        pkey = f"{case.site}/{case.patient_id}"
+        if pkey in conflicted_patients:
+            dropped.append({"case_id": case.case_id, "patient": pkey,
+                            "sha256": digest, "reason": "conflicting-label duplicate group"})
+            continue
+        if digest in seen_hash:
+            dropped.append({"case_id": case.case_id, "patient": pkey,
+                            "sha256": digest, "reason": "byte-duplicate copy"})
+            continue
+        seen_hash.add(digest)
+        alias_root = find(pkey).split("/", 1)[1] if pkey in parent else case.patient_id
+        case_id = (f"{case.site}-{digest[:16]}" if case.site == "cmmd" else case.case_id)
+        clean.append(MammoCase(**{**case.to_json(),
+                                  "case_id": case_id, "patient_id": alias_root}))
+
+    audit = {
+        "n_input": len(cases), "n_kept": len(clean), "n_dropped": len(dropped),
+        "merged_patient_groups": sorted(merged_groups),
+        "conflicted_patients_dropped": sorted(conflicted_patients),
+        "dropped": sorted(dropped, key=lambda d: d["case_id"]),
+    }
+    return clean, audit

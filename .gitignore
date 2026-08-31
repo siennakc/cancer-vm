@@ -32,5 +32,10 @@ mlruns/
 
 # Ingestion working files (manifests are committed once a fetch completes)
 data/metadata/*.log
-data/processed/
+data/processed/*
+!data/processed/cases_v1.jsonl
+!data/processed/splits_v1.json
+!data/processed/sealed_test_v1.json
+!data/processed/sealed_access_log.jsonl
 data/metadata/*_series.json
+!data/processed/duplicates_audit_v1.json

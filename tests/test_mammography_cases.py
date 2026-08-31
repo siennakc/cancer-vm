@@ -110,3 +110,47 @@ def test_case_table_round_trips(tmp_path):
     )
     path = write_case_table([case], tmp_path / "cases.jsonl")
     assert read_case_table(path) == [case]
+
+
+def _mc(case_id, patient, path, label, site="cmmd"):
+    return MammoCase(case_id=case_id, patient_id=patient, site=site,
+                     dicom_path=path, label=label, laterality="L", view=None,
+                     abnormality="mass", density_band=None, age_band=None,
+                     source_split=None)
+
+
+def test_content_audit_twins_and_conflicts(tmp_path):
+    """Byte-identical files across patients: merge if labels agree, drop if not."""
+    from oncoscope.data.mammography import content_audit
+
+    raw = tmp_path
+    (raw / "a.dcm").write_bytes(b"IMAGE-ALPHA")
+    (raw / "a2.dcm").write_bytes(b"IMAGE-ALPHA")      # same bytes, other patient
+    (raw / "b.dcm").write_bytes(b"IMAGE-BETA")
+    (raw / "b2.dcm").write_bytes(b"IMAGE-BETA")       # same bytes, conflicting label
+    (raw / "c.dcm").write_bytes(b"IMAGE-GAMMA")       # unique, innocent bystander
+
+    cases = [
+        _mc("cmmd-uid1", "D1-0002", "a.dcm", 1),      # twin pair, labels agree
+        _mc("cmmd-uid2", "D1-0001", "a2.dcm", 1),
+        _mc("cmmd-uid3", "D1-0010", "b.dcm", 0),      # twin pair, labels CONFLICT
+        _mc("cmmd-uid4", "D2-0020", "b2.dcm", 1),
+        _mc("cmmd-uid5", "D1-0099", "c.dcm", 0),
+    ]
+    clean, audit = content_audit(cases, raw)
+
+    # conflicting pair: every image of both patients dropped
+    kept_patients = {c.patient_id for c in clean}
+    assert "D1-0010" not in kept_patients and "D2-0020" not in kept_patients
+
+    # consistent pair: one copy kept, both ids collapsed to the alias root
+    alpha = [c for c in clean if c.patient_id == "D1-0001"]
+    assert len(alpha) == 1
+    assert audit["merged_patient_groups"] == [["cmmd/D1-0001", "cmmd/D1-0002"]]
+
+    # content-addressed ids: identical bytes can never be two cases again
+    assert alpha[0].case_id.startswith("cmmd-") and len(alpha[0].case_id) == 21
+
+    # bystander untouched
+    assert any(c.patient_id == "D1-0099" for c in clean)
+    assert audit["n_kept"] == 2 and audit["n_dropped"] == 3

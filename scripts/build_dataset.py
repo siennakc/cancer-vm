@@ -7,11 +7,14 @@ download — it reports coverage so a short dataset is visible rather than silen
 from __future__ import annotations
 
 import collections
+import json
 import sys
+from pathlib import Path
 
 sys.path.insert(0, "src")
 
-from oncoscope.data.mammography import build_cbis_cases, build_cmmd_cases, write_case_table
+from oncoscope.data.mammography import (build_cbis_cases, build_cmmd_cases,
+                                         content_audit, write_case_table)
 from oncoscope.data.splits import make_splits, save_manifest
 
 META, RAW, OUT = "data/metadata", "data/raw", "data/processed"
@@ -40,6 +43,15 @@ def main() -> None:
 
     if not cases:
         raise SystemExit("no cases built — run the fetch scripts first")
+
+    # Byte-level duplicate audit: merge consistent twins, drop conflicted ones.
+    cases, audit = content_audit(cases, RAW)
+    audit_path = Path(f"{OUT}/duplicates_audit_v1.json")
+    audit_path.parent.mkdir(parents=True, exist_ok=True)
+    audit_path.write_text(json.dumps(audit, indent=1))
+    print(f"audit: kept={audit['n_kept']} dropped={audit['n_dropped']} "
+          f"merged_groups={len(audit['merged_patient_groups'])} "
+          f"conflicted={len(audit['conflicted_patients_dropped'])}")
 
     table = write_case_table(cases, f"{OUT}/cases_v1.jsonl")
     print(f"\nwrote {table} ({len(cases)} cases)")
