@@ -145,10 +145,23 @@ discrimination does.
   bugs; the sealed access log records them (4/50 spent total).
 - Frozen generic features as a screener: chance on any truly foreign domain.
 
-## Part 5 — planned next, in expected-yield order
+## Part 5 — the harness A/B (run 2026-08-31)
 
-1. **Patch pretraining from the CBIS ROI masks** (the core of Shen's 0.88):
-   ~50 GB mask series + a 5-class patch stage before whole-image training.
+Same v4 weights on the same 709 benchmark images, alone vs inside the
+rule-adjudicated Onco-Harness pipeline: **A 0.771 vs B 0.700**, paired
+ΔAUROC −0.071 [−0.099, −0.044], at 29 tool calls/case; 41% deferred to human
+with deferrals shown to be uninformative (model-alone performs identically on
+deferred vs answered cases). Mechanism: the harness presumes a localizing
+detector; a whole-image classifier's fragmented window reads are OOD and the
+aggregation destroys the calibrated global signal. Full analysis and the fix
+list: `results/ab_harness/CARD.md`. The measurement apparatus did its job —
+it refused to certify the architecture in this configuration.
+
+## Part 6 — planned next, in expected-yield order
+
+1. **Patch pretraining from the CBIS ROI masks** (the core of Shen's 0.88,
+   AND the fix for the harness A/B: it yields the localizing detector the
+   harness architecture presumes): ~50 GB mask series + a 5-class patch stage.
 2. Multi-seed / multi-backbone ensemble (Shen's 0.88 → 0.91 came from
    4-model averaging).
 3. Flip-TTA at inference (deterministic transform set).

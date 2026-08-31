@@ -128,3 +128,9 @@ python3.12 -m venv .venv && .venv/bin/pip install -e '.[dev]' pandas openpyxl
 
 Data licences and citations: `DATA_LICENSES.md`. Task provenance: `TASKSHEET.md`.
 Full intervention-by-intervention ledger (what made it better, what didn't): `TRAINING_HISTORY.md`.
+
+**Harness A/B** (same weights, same benchmark): model alone 0.771 vs
+rule-adjudicated harness 0.700 (paired Δ −0.071 [−0.099, −0.044], 29 tool
+calls/case, 41% uninformative deferrals) — the honest current answer to
+"does the harness help?" is **not yet, and the measurement says exactly why**:
+`results/ab_harness/CARD.md`.
