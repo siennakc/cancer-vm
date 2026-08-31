@@ -97,6 +97,10 @@ To use the LLM adjudicator instead of the rule-based one, install the agent extr
 | baseline_v1 — frozen IN1K ResNet-50 | AUROC 0.707 · sens@96 0.179 | AUROC **0.504** (chance) |
 | finetune_v2 — fine-tuned encoder | AUROC **0.8165** · sens@96 0.337 | AUROC **0.733** · sens@96 0.423 |
 
+**Official CBIS-DDSM test split** (public benchmark, n=709; quarantined splits_v2
+arms — v2 is disqualified there, see `results/public_cbis/CARD.md`):
+frozen control 0.628 · **finetune_v3 0.742 [0.696–0.786]**, subgroup grids included.
+
 The external column is the honest one: the frozen baseline's internal score was
 substantially shortcut (site prevalence), and calibration does not survive the
 domain shift (v2 external ECE 0.485 — refit per site before quoting any

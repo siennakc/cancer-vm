@@ -1,0 +1,104 @@
+{
+ "benchmark": "CBIS-DDSM official test split",
+ "protocol": "image-level malignant vs benign(+BWC), official mass+calc test CSVs",
+ "model": "frozen_v1q",
+ "quarantine": "splits_v2 public_bench (349 patients, 709 images)",
+ "overall": {
+  "slice": "official test (all)",
+  "n": 709,
+  "prevalence": 0.4118476727785614,
+  "auroc": 0.6275,
+  "auroc_ci95": [
+   0.5766,
+   0.6801
+  ],
+  "sens_at_spec96": 0.0651,
+  "sens_at_spec96_ci95": [
+   0.0224,
+   0.1254
+  ],
+  "ece_adaptive": 0.0642
+ },
+ "subgroups": [
+  {
+   "slice": "abnormality=mass",
+   "n": 386,
+   "prevalence": 0.3963730569948187,
+   "auroc": 0.5703,
+   "auroc_ci95": [
+    0.494,
+    0.6419
+   ]
+  },
+  {
+   "slice": "abnormality=calcification",
+   "n": 323,
+   "prevalence": 0.43034055727554177,
+   "auroc": 0.6932,
+   "auroc_ci95": [
+    0.6141,
+    0.7657
+   ]
+  },
+  {
+   "slice": "density=a",
+   "n": 49,
+   "prevalence": 0.46938775510204084,
+   "auroc": 0.4599,
+   "auroc_ci95": [
+    0.2742,
+    0.7009
+   ]
+  },
+  {
+   "slice": "density=b",
+   "n": 178,
+   "prevalence": 0.42696629213483145,
+   "auroc": 0.6055,
+   "auroc_ci95": [
+    0.5005,
+    0.7064
+   ]
+  },
+  {
+   "slice": "density=c",
+   "n": 111,
+   "prevalence": 0.3153153153153153,
+   "auroc": 0.5128,
+   "auroc_ci95": [
+    0.36,
+    0.6574
+   ]
+  },
+  {
+   "slice": "density=d",
+   "n": 48,
+   "prevalence": 0.3958333333333333,
+   "auroc": 0.833,
+   "auroc_ci95": [
+    0.6994,
+    0.9389
+   ]
+  },
+  {
+   "slice": "view=CC",
+   "n": 331,
+   "prevalence": 0.4078549848942598,
+   "auroc": 0.6411,
+   "auroc_ci95": [
+    0.5781,
+    0.7042
+   ]
+  },
+  {
+   "slice": "view=MLO",
+   "n": 378,
+   "prevalence": 0.41534391534391535,
+   "auroc": 0.6173,
+   "auroc_ci95": [
+    0.5593,
+    0.6777
+   ]
+  }
+ ]
+}

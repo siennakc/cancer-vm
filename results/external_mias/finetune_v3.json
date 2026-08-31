@@ -1,0 +1,17 @@
+{
+ "dataset": "MIAS v1.21 (external validation, never trained on)",
+ "model": "finetune_v3",
+ "n": 322,
+ "prevalence": 0.16149068322981366,
+ "auroc": 0.6635,
+ "auroc_ci95": [
+  0.5761,
+  0.7408
+ ],
+ "sens_at_spec96": 0.1731,
+ "sens_at_spec96_ci95": [
+  0.0217,
+  0.2889
+ ],
+ "ece_adaptive": 0.4935
+}
