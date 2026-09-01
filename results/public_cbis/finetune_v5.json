@@ -1,104 +1,104 @@
 {
  "benchmark": "CBIS-DDSM official test split",
  "protocol": "image-level malignant vs benign(+BWC), official mass+calc test CSVs",
- "model": "finetune_v3",
+ "model": "finetune_v5",
  "quarantine": "splits_v2 public_bench (349 patients, 709 images)",
- "encoder_lineage": "verified: 1 manifest(s), all splits_v2",
+ "encoder_lineage": "verified: 2 manifest(s), all splits_v2",
  "overall": {
   "slice": "official test (all)",
   "n": 709,
   "prevalence": 0.41748942172073344,
-  "auroc": 0.7416,
+  "auroc": 0.735,
   "auroc_ci95": [
-   0.6939,
-   0.7859
+   0.6878,
+   0.78
   ],
-  "sens_at_spec96": 0.2365,
+  "sens_at_spec96": 0.2297,
   "sens_at_spec96_ci95": [
-   0.1434,
-   0.3119
+   0.1574,
+   0.326
   ],
-  "ece_adaptive": 0.123
+  "ece_adaptive": 0.1356
  },
  "subgroups": [
   {
    "slice": "abnormality=mass",
    "n": 386,
    "prevalence": 0.4015544041450777,
-   "auroc": 0.7626,
+   "auroc": 0.7675,
    "auroc_ci95": [
-    0.6975,
-    0.8205
+    0.7066,
+    0.8215
    ]
   },
   {
    "slice": "abnormality=calcification",
    "n": 323,
    "prevalence": 0.43653250773993807,
-   "auroc": 0.7247,
+   "auroc": 0.7076,
    "auroc_ci95": [
-    0.6558,
-    0.7911
+    0.6354,
+    0.7728
    ]
   },
   {
    "slice": "density=a",
    "n": 77,
    "prevalence": 0.37662337662337664,
-   "auroc": 0.8671,
+   "auroc": 0.8491,
    "auroc_ci95": [
-    0.7415,
-    0.9556
+    0.7086,
+    0.9529
    ]
   },
   {
    "slice": "density=b",
    "n": 290,
    "prevalence": 0.40344827586206894,
-   "auroc": 0.7578,
+   "auroc": 0.7612,
    "auroc_ci95": [
-    0.6886,
-    0.8284
+    0.693,
+    0.8261
    ]
   },
   {
    "slice": "density=c",
    "n": 217,
    "prevalence": 0.41013824884792627,
-   "auroc": 0.6894,
+   "auroc": 0.7057,
    "auroc_ci95": [
-    0.5923,
-    0.7752
+    0.6117,
+    0.7919
    ]
   },
   {
    "slice": "density=d",
    "n": 123,
    "prevalence": 0.4796747967479675,
-   "auroc": 0.6874,
+   "auroc": 0.6251,
    "auroc_ci95": [
-    0.5686,
-    0.7984
+    0.5028,
+    0.7424
    ]
   },
   {
    "slice": "view=CC",
    "n": 331,
    "prevalence": 0.41389728096676737,
-   "auroc": 0.7672,
+   "auroc": 0.7341,
    "auroc_ci95": [
-    0.7111,
-    0.8183
+    0.675,
+    0.7881
    ]
   },
   {
    "slice": "view=MLO",
    "n": 378,
    "prevalence": 0.42063492063492064,
-   "auroc": 0.72,
+   "auroc": 0.7362,
    "auroc_ci95": [
-    0.6628,
-    0.7727
+    0.6831,
+    0.7855
    ]
   }
  ]

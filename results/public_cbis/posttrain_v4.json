@@ -3,108 +3,103 @@
  "protocol": "image-level malignant vs benign(+BWC), official mass+calc test CSVs",
  "model": "posttrain_v4",
  "quarantine": "splits_v2 public_bench (349 patients, 709 images)",
+ "encoder_lineage": "verified: 1 manifest(s), all splits_v2",
  "overall": {
   "slice": "official test (all)",
   "n": 709,
-  "prevalence": 0.4118476727785614,
+  "prevalence": 0.41748942172073344,
   "auroc": 0.7707,
   "auroc_ci95": [
-   0.7261,
-   0.8145
+   0.7256,
+   0.8141
   ],
-  "sens_at_spec96": 0.2192,
+  "sens_at_spec96": 0.2264,
   "sens_at_spec96_ci95": [
-   0.1294,
-   0.3066
+   0.148,
+   0.3257
   ],
-  "ece_adaptive": 0.1069
+  "ece_adaptive": 0.1042
  },
  "subgroups": [
   {
    "slice": "abnormality=mass",
    "n": 386,
-   "prevalence": 0.3963730569948187,
-   "auroc": 0.7479,
+   "prevalence": 0.4015544041450777,
+   "auroc": 0.7571,
    "auroc_ci95": [
-    0.6855,
-    0.8062
+    0.6977,
+    0.813
    ]
   },
   {
    "slice": "abnormality=calcification",
    "n": 323,
-   "prevalence": 0.43034055727554177,
-   "auroc": 0.8027,
+   "prevalence": 0.43653250773993807,
+   "auroc": 0.7927,
    "auroc_ci95": [
-    0.7391,
-    0.861
+    0.7288,
+    0.8522
    ]
   },
   {
    "slice": "density=a",
-   "n": 49,
-   "prevalence": 0.46938775510204084,
-   "auroc": 0.9264,
+   "n": 77,
+   "prevalence": 0.37662337662337664,
+   "auroc": 0.9418,
    "auroc_ci95": [
-    0.8343,
-    0.9899
+    0.8653,
+    0.9892
    ]
   },
   {
    "slice": "density=b",
-   "n": 178,
-   "prevalence": 0.42696629213483145,
-   "auroc": 0.7714,
+   "n": 290,
+   "prevalence": 0.40344827586206894,
+   "auroc": 0.7725,
    "auroc_ci95": [
-    0.6759,
-    0.8538
+    0.6976,
+    0.8403
    ]
   },
   {
    "slice": "density=c",
-   "n": 111,
-   "prevalence": 0.3153153153153153,
-   "auroc": 0.6293,
+   "n": 217,
+   "prevalence": 0.41013824884792627,
+   "auroc": 0.7273,
    "auroc_ci95": [
-    0.4697,
-    0.7683
+    0.6295,
+    0.8132
    ]
   },
   {
    "slice": "density=d",
-   "n": 48,
-   "prevalence": 0.3958333333333333,
-   "auroc": 0.7768,
+   "n": 123,
+   "prevalence": 0.4796747967479675,
+   "auroc": 0.7263,
    "auroc_ci95": [
-    0.6424,
-    0.8912
+    0.6223,
+    0.8214
    ]
   },
   {
    "slice": "view=CC",
    "n": 331,
-   "prevalence": 0.4078549848942598,
-   "auroc": 0.7863,
+   "prevalence": 0.41389728096676737,
+   "auroc": 0.7865,
    "auroc_ci95": [
-    0.7341,
-    0.8338
+    0.7334,
+    0.8348
    ]
   },
   {
    "slice": "view=MLO",
    "n": 378,
-   "prevalence": 0.41534391534391535,
-   "auroc": 0.7568,
+   "prevalence": 0.42063492063492064,
+   "auroc": 0.7567,
    "auroc_ci95": [
-    0.7081,
-    0.8042
+    0.7068,
+    0.8053
    ]
   }
- ],
- "notes": {
-  "density_grid_coverage": "density=* slices cover mass cases only (n=386 of 709): build_cbis_cases read the mass CSVs' 'breast_density' spelling but not the calc CSVs' 'breast density', so every calcification case carried density_band=null when this grid was computed. The parser and cases_v1.jsonl are fixed (scripts/backfill_density_v1.py); these density rows are stale until eval_public_cbis.py is re-run. abnormality=* and view=* slices are unaffected and cover all 709.",
-  "density_slice_n_total": 386,
-  "benchmark_n": 709,
-  "label_gold_revision": "gold-label revision 2026-08-31: build_cbis_cases deduplicated per-abnormality CSV rows first-wins, labeling 11 multi-finding images benign despite a biopsy-proven malignant row. cases_v1.jsonl now carries any-malignant labels (scripts/backfill_labels_v1.py). Numbers in this file were computed against the OLD gold and are stale by 4 affected case(s) until re-scored; the error direction (malignant scored as benign) depressed measured AUROC."
- }
+ ]
 }
