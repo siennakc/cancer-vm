@@ -166,3 +166,34 @@ it refused to certify the architecture in this configuration.
    4-model averaging).
 3. Flip-TTA at inference (deterministic transform set).
 4. Per-site calibration refit for any deployment-shaped claim.
+
+## Part 7 — the patch stage, first results (run 2026-09-01, per TRAINING_HANDOFF.md)
+
+**1b, dataset:** ROI join clean — 3,459/3,553 records ok, 5 unusable (0.14%);
+31,299 train patches sampled from 1,673 quarantine-respecting images, all
+guards quiet (sanity rail was 1,600–2,000 images).
+
+**1d, v5 warm-start: a wash.** Whole-image fine-tune initialized from the
+5-class patch backbone matched v3's calibration AUROC to the third decimal
+(0.8336 vs 0.8331) and landed at 0.735 [0.688–0.780] on the bench vs v3's
+0.7416 — the patch features neither helped nor hurt at 448px. Recorded as a
+negative; the literature's patch-stage gains evidently need the rest of the
+recipe (high-res conversion, ensembling) and not the warm start alone. Open:
+high-res post-train on v5, and the patch model's detector role (below).
+
+**2, corrected-gold re-scores:** v3 0.7416 [0.694–0.787], v4 0.7707
+[0.726–0.814] — both effectively unchanged; the 11 label fixes were already
+ranked correctly by the models (the error direction depressed nothing
+measurable at this n). Density grids now cover all 709 images: v4 density
+a/b/c/d = 0.942/0.773/0.727/0.726. The earlier "density-c ≈ chance" reading
+was the mass-only-grid artifact; dense breasts are weak, not blind.
+Encoder lineage verified in code for every re-score.
+
+**3a, harness A/B handicap isolation: native input made it WORSE.**
+Δ −0.0903 [−0.1208, −0.0603] vs −0.0711 with the 1600px shrink — the shrink
+had been *softening* the harness's failure, not causing it. Fragmentation of
+the calibrated whole-image signal into OOD window reads is now the isolated
+mechanism. Deferral rate fell to 22.6% at native res but deferrals remain
+uninformative (model-alone AUROC 0.760 deferred vs 0.753 answered). The
+pre-registered rematch — patch detector as proposer — is wired
+(`ab_harness_bench.py --proposer patch`) and queued.

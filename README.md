@@ -20,8 +20,13 @@ Image-level malignant-vs-benign, AUROC with patient-clustered 95% CIs.
 |---|---|---|---|
 | v1 frozen IN1K + refit head | 0.628 [0.577–0.680] | 0.512 (chance) | 0.707 |
 | v2 fine-tuned (`weights-v2`) | *disqualified⁴* | 0.733 [0.65–0.81] | **0.8165** |
-| v3 fine-tuned, quarantined (`weights-v3`) | 0.742 [0.696–0.786] | 0.664 [0.58–0.74] | — |
-| **v4 + high-res post-train (`weights-v4`)** | **0.771 [0.726–0.815]** | **0.736 [0.66–0.81]** | — |
+| v3 fine-tuned, quarantined (`weights-v3`) | 0.742 [0.694–0.787] | 0.664 [0.58–0.74] | — |
+| **v4 + high-res post-train (`weights-v4`)** | **0.771 [0.726–0.814]** | **0.736 [0.66–0.81]** | — |
+| v5 patch-warm-start, 448px | 0.735 [0.688–0.780] — a wash⁵ | — | — |
+
+Public-benchmark numbers re-scored 2026-09-01 against the corrected
+any-malignant gold with verified encoder lineage; v3/v4 moved <0.001 (the 11
+fixed labels were already ranked correctly by the models).
 
 ¹ 709 images from the **349 patients** named in the official mass+calc test
 CSVs. That is a patient-complete *superset* of the official 645-image test
@@ -43,20 +48,23 @@ refuses any manifest that puts a sealed patient in a fitting split.
 ⁴ v2 trained on 202 of the official test split's 349 patients (our patient-grouped
 splits predate the quarantine) — its internal/MIAS numbers stand, its official-split
 numbers would be leakage and are not reported.
+⁵ Warm-starting the whole-image encoder from the 5-class patch model
+(31,299 patches, 1,673 quarantine-respecting images) matched v3's calibration
+AUROC exactly (0.8336 vs 0.8331) and did not beat it on the bench at 448px —
+a reportable negative. The patch model's other role (localizing detector for
+the harness rematch) and the high-res post-train on v5 remain open.
 
 Subgroup slices (BenchX-style; v4, official split): mass 0.748 / calc **0.803** ·
 CC 0.786 / MLO 0.757. The resolution bump moved calcifications most
 (v3: 0.736 → 0.803) — exactly the microcalcification-detail mechanism the
 literature predicts.
 
-Density slices — a 0.926, b 0.771, **c 0.629**, d 0.777 — **cover masses only
-(386 of 709)** and are stale: the case builder read the mass CSVs'
-`breast_density` column but not the calc CSVs' `breast density`, so every
-calcification case carried a null band when the grid was computed. Parser and
-case table are fixed; the grid needs `eval_public_cbis.py` re-run to cover all
-709. Read density-c with care either way: its CI **[0.470–0.768] contains 0.5**,
-so on masses in dense breasts this model is not distinguishable from chance.
-`results/public_cbis/*.json` has the grid and the coverage note.
+Density slices (v4, re-scored 2026-09-01, now covering all 709 after the
+column-spelling fix): a 0.942, b 0.773, **c 0.727**, d 0.726. The earlier
+"density-c indistinguishable from chance" reading was an artifact of the grid
+silently covering masses only — with calcifications included, dense-breast
+performance is weak but real (c: [0.630–0.813]). Dense breasts (c/d) remain
+the soft half of the model. `results/public_cbis/*.json` has the full grid.
 
 ## Get the model
 
@@ -155,11 +163,13 @@ python3.12 -m venv .venv && .venv/bin/pip install -e '.[dev]' pandas openpyxl
 Data licences and citations: `DATA_LICENSES.md`. Task provenance: `TASKSHEET.md`.
 Full intervention-by-intervention ledger (what made it better, what didn't): `TRAINING_HISTORY.md`.
 
-**Harness A/B** (same weights, same benchmark): model alone 0.771 vs
-rule-adjudicated harness 0.700 (paired Δ −0.071 [−0.099, −0.044], 29 tool
-calls/case, 41% uninformative deferrals) — the honest current answer to
-"does the harness help?" is **not yet, and the measurement says exactly why**:
-`results/ab_harness/CARD.md`. Caveat discovered post-hoc: that run pre-shrank
-the harness arm's input to 1600 px while the model arm saw native pixels, so
-the *magnitude* of the loss is soft (sign and significance need re-running;
-the script now defaults to a fair native-input comparison).
+**Harness A/B** (same weights, same benchmark): model alone 0.771 vs the
+rule-adjudicated harness — **Δ −0.071** with the original 1600px input, and
+**Δ −0.090 [−0.121, −0.060]** in the fair native-resolution re-run
+(2026-09-01). The audit's fairness caveat resolved in the unexpected
+direction: giving the harness full resolution made it *worse*, which pins the
+fault on window fragmentation (out-of-distribution sub-reads destroying the
+calibrated whole-image signal), not resolution. The honest answer to "does
+the harness help?" remains **no — and the mechanism is now isolated**:
+`results/ab_harness/CARD.md`. The decisive rematch (patch detector as
+proposer, `--proposer patch`) is queued.
