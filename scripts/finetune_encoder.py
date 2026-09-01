@@ -87,8 +87,14 @@ def main():
     ap.add_argument("--batch", type=int, default=16)
     ap.add_argument("--lr", type=float, default=1e-4)
     ap.add_argument("--resume", type=str, default=None)
-    ap.add_argument("--splits", type=str, default="data/processed/splits_v1.json")
+    # Default is the QUARANTINED manifest. splits_v1 predates the public-bench
+    # quarantine (its train holds 202 official-test patients — the v2
+    # disqualification); pass it only to reproduce the historical v1/v2 runs.
+    ap.add_argument("--splits", type=str, default="data/processed/splits_v2.json")
     ap.add_argument("--run", type=str, default="runs/finetune_v2")
+    ap.add_argument("--init-weights", type=str, default=None,
+                    help="warm-start the backbone from a patch-model checkpoint "
+                         "(runs/patch_v1/best_model.pt); its 5-class fc is dropped")
     args = ap.parse_args()
 
     global RUN
@@ -114,14 +120,69 @@ def main():
     cal_loader = DataLoader(RenderDataset(cal, train=False), batch_size=args.batch,
                             num_workers=4, persistent_workers=True)
 
-    net = build_model().to(device)
+    net = build_model()
+    init_lineage: list[dict] = []
+    if args.init_weights:
+        # Patch-stage warm start (Shen et al.): backbone only, both fcs differ
+        # (patch fc is 5-class, ours is 1-logit) so fc.* is always dropped.
+        ck_init = torch.load(args.init_weights, map_location="cpu",
+                             weights_only=False)
+        # A warm start is a fitting stage: the init weights carry everything
+        # their training data taught them, so the init's split manifest MUST
+        # be the same one this run holds out against. splits_v1 and splits_v2
+        # cross memberships for 609 patients — a cross-manifest warm start
+        # would leave the resulting encoder with no clean evaluation surface
+        # at all (sealed set contaminated via the init, benchmark via train).
+        if ck_init.get("tainted"):
+            raise SystemExit(
+                "--init-weights checkpoint is TAINTED (trained on "
+                "--allow-unquarantined smoke shards) — it must never "
+                "initialize a real run"
+            )
+        init_sha = ck_init.get("splits_sha256")
+        if init_sha != splits.sha256:
+            raise SystemExit(
+                f"--init-weights checkpoint was fit under splits sha "
+                f"{str(init_sha)[:12]}…, but this run uses {splits.sha256[:12]}… "
+                f"({args.splits}). Cross-manifest warm starts contaminate every "
+                "evaluation surface. Pass the matching --splits, or retrain the "
+                "patch model under this manifest."
+            )
+        init_lineage = list(ck_init.get("init_lineage", [])) + [
+            {"path": str(args.init_weights), "splits_sha256": init_sha}
+        ]
+        state = {k: v for k, v in ck_init["model"].items() if not k.startswith("fc.")}
+        missing, unexpected = net.load_state_dict(state, strict=False)
+        assert not unexpected, f"unexpected keys: {unexpected[:3]}"
+        assert all(k.startswith("fc.") for k in missing), f"missing: {missing[:3]}"
+        print(f"[ft] backbone warm-started from {args.init_weights} "
+              f"(lineage verified against {args.splits})", flush=True)
+    net = net.to(device)
     opt = torch.optim.AdamW(net.parameters(), lr=args.lr, weight_decay=1e-4)
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=args.epochs)
     start, best = 0, -1.0
     history = []
 
     if args.resume:
+        if args.init_weights:
+            # A resume continues a run whose initialization already happened;
+            # re-passing --init-weights is at best redundant and at worst
+            # records a warm start the loaded weights immediately overwrite.
+            raise SystemExit("--resume and --init-weights are mutually exclusive: "
+                             "the checkpoint already embodies the run's initialization")
         ck = torch.load(args.resume, map_location=device, weights_only=False)
+        # Same-manifest rule as the warm start: resuming epochs trained under
+        # a different membership launders them past every downstream check.
+        # (Historical v1-era checkpoints resume only with --splits splits_v1.)
+        if ck.get("splits_sha256") != splits.sha256:
+            raise SystemExit(
+                f"--resume checkpoint was trained under splits sha "
+                f"{str(ck.get('splits_sha256'))[:12]}…, this run holds "
+                f"{splits.sha256[:12]}… ({args.splits}) — refusing the "
+                "cross-manifest resume")
+        # The checkpoint is the authoritative record of how the run STARTED:
+        # a resume without --init-weights must not erase the warm-start lineage.
+        init_lineage = list(ck.get("init_lineage", init_lineage))
         net.load_state_dict(ck["model"])
         opt.load_state_dict(ck["optimizer"])
         sched.load_state_dict(ck["scheduler"])
@@ -149,11 +210,13 @@ def main():
             best = cal_auc
             torch.save({"model": net.state_dict(), "epoch": epoch,
                         "cal_auroc": cal_auc,
-                        "splits_sha256": splits.sha256}, RUN / "best_model.pt")
+                        "splits_sha256": splits.sha256,
+                        "init_lineage": init_lineage}, RUN / "best_model.pt")
         torch.save({"model": net.state_dict(), "optimizer": opt.state_dict(),
                     "scheduler": sched.state_dict(), "epoch": epoch,
                     "best_cal_auroc": best, "history": history,
-                    "splits_sha256": splits.sha256}, RUN / "checkpoint.pt")
+                    "splits_sha256": splits.sha256,
+                    "init_lineage": init_lineage}, RUN / "checkpoint.pt")
         (RUN / "history.json").write_text(json.dumps(history, indent=1))
 
     print(f"[ft] done. best cal AUROC={best:.4f} -> {RUN}/best_model.pt", flush=True)

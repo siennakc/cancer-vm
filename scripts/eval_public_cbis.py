@@ -21,10 +21,40 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--tag", required=True)            # embedding cache tag
 ap.add_argument("--head", required=True)           # head.json path
 ap.add_argument("--name", required=True)           # report name
+ap.add_argument("--encoder-checkpoint", default=None,
+                help="best_model.pt behind the embedding tag; verifies the "
+                     "encoder's manifest sha, warm-start lineage, and taint "
+                     "flag against splits_v2 before any number is written")
 args = ap.parse_args()
 
 cases = read_case_table("data/processed/cases_v1.jsonl")
 splits = load_manifest("data/processed/splits_v2.json")
+
+# Provenance at the published-number boundary: embeddings arrive by tag with
+# no history, so the check has to be asked for by handing over the encoder
+# checkpoint. Warm starts make this matter: the encoder's OWN manifest and
+# every init_lineage manifest can each independently contaminate the bench.
+lineage_note = "unverified (no --encoder-checkpoint given)"
+if args.encoder_checkpoint:
+    import torch
+    ck = torch.load(args.encoder_checkpoint, map_location="cpu", weights_only=False)
+    if ck.get("tainted"):
+        raise SystemExit("encoder checkpoint is TAINTED (smoke shards) — refusing")
+    shas = [("self", ck.get("splits_sha256"))] + [
+        (e.get("path", "?"), e.get("splits_sha256"))
+        for e in ck.get("init_lineage", [])
+    ]
+    bad = [(who, s) for who, s in shas if s != splits.sha256]
+    if bad:
+        raise SystemExit(
+            f"encoder lineage includes manifests other than splits_v2 "
+            f"({splits.sha256[:12]}…): {[(w, str(s)[:12]) for w, s in bad]} — "
+            "a fitting stage of this model may have touched bench patients")
+    lineage_note = f"verified: {len(shas)} manifest(s), all splits_v2"
+    print(f"[eval] encoder lineage {lineage_note}", flush=True)
+else:
+    print("[eval] WARNING: encoder lineage unverified — pass --encoder-checkpoint "
+          "so the quarantine is checked in code rather than by memory", flush=True)
 bench = [c for c in cases if splits.split_of(f"{c.site}/{c.patient_id}") == "public_bench"]
 assert len({c.patient_id for c in bench}) == 349, "unexpected bench membership"
 
@@ -63,6 +93,7 @@ slices = [x for x in slices if x]
 report = {"benchmark": "CBIS-DDSM official test split",
           "protocol": "image-level malignant vs benign(+BWC), official mass+calc test CSVs",
           "model": args.name, "quarantine": "splits_v2 public_bench (349 patients, 709 images)",
+          "encoder_lineage": lineage_note,
           "overall": full, "subgroups": slices}
 out = Path(f"results/public_cbis/{args.name}.json")
 out.parent.mkdir(parents=True, exist_ok=True)

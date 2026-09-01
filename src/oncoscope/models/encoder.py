@@ -24,6 +24,26 @@ _IMAGENET_MEAN = np.array([0.485, 0.456, 0.406], dtype=np.float32)
 _IMAGENET_STD = np.array([0.229, 0.224, 0.225], dtype=np.float32)
 
 
+def crop_box(pixels: np.ndarray, threshold: float = 0.02, pad: int = 16) -> tuple[int, int, int, int]:
+    """The breast bounding box (r0, r1, c0, c1) that ``breast_crop`` applies.
+
+    Exposed separately so annotation rasters (ROI masks) can be cropped with
+    the box computed from the IMAGE — computing a box from a mask's own pixels
+    would silently misalign lesion coordinates with the rendered image.
+    """
+    mask = pixels > threshold
+    rows, cols = np.any(mask, axis=1), np.any(mask, axis=0)
+    if not rows.any() or not cols.any():
+        return 0, pixels.shape[0], 0, pixels.shape[1]
+    r0, r1 = np.argmax(rows), len(rows) - np.argmax(rows[::-1])
+    c0, c1 = np.argmax(cols), len(cols) - np.argmax(cols[::-1])
+    r0, c0 = max(0, int(r0) - pad), max(0, int(c0) - pad)
+    r1, c1 = min(pixels.shape[0], int(r1) + pad), min(pixels.shape[1], int(c1) + pad)
+    if r1 <= r0 or c1 <= c0:
+        return 0, pixels.shape[0], 0, pixels.shape[1]
+    return int(r0), int(r1), int(c0), int(c1)
+
+
 def breast_crop(pixels: np.ndarray, threshold: float = 0.02, pad: int = 16) -> np.ndarray:
     """Crop to the breast's bounding box, dropping the empty background field.
 
@@ -31,14 +51,7 @@ def breast_crop(pixels: np.ndarray, threshold: float = 0.02, pad: int = 16) -> n
     encoder's resolution on black. Threshold + bounding box is crude but
     deterministic, and failures degrade to the uncropped image.
     """
-    mask = pixels > threshold
-    rows, cols = np.any(mask, axis=1), np.any(mask, axis=0)
-    if not rows.any() or not cols.any():
-        return pixels
-    r0, r1 = np.argmax(rows), len(rows) - np.argmax(rows[::-1])
-    c0, c1 = np.argmax(cols), len(cols) - np.argmax(cols[::-1])
-    r0, c0 = max(0, r0 - pad), max(0, c0 - pad)
-    r1, c1 = min(pixels.shape[0], r1 + pad), min(pixels.shape[1], c1 + pad)
+    r0, r1, c0, c1 = crop_box(pixels, threshold=threshold, pad=pad)
     crop = pixels[r0:r1, c0:c1]
     return crop if crop.size else pixels
 

@@ -135,7 +135,7 @@ class SealedTestSet:
         caller: str,
         specificity: float = 0.96,
         gold_version: str = "v1",
-        fit_manifest: str | Path | None = None,
+        fit_manifest: str | Path | list | None = None,
         external: bool = False,
     ) -> dict[str, float]:
         """Aggregate metrics only. One budget unit per call. Every call logged.
@@ -144,15 +144,27 @@ class SealedTestSet:
         the candidate was fit under — checked against the sealed patients), or
         declare ``external=True`` for a benchmark whose cases cannot appear in
         any internal fitting split (e.g. MIAS). Silence is not an option.
+
+        A warm-started model has MORE THAN ONE fit manifest — its own plus
+        every entry in its checkpoint's ``init_lineage`` — and each one can
+        independently contaminate the sealed set. Pass them all as a list;
+        every manifest must be clean for scoring to proceed.
         """
         if not external:
             if fit_manifest is None:
                 raise SealedProvenanceError(
-                    "declare the candidate's fit manifest (fit_manifest=...) or "
-                    "mark the benchmark external=True — scoring without split "
-                    "provenance is how a sealed set gets quietly burned"
+                    "declare the candidate's fit manifest(s) (fit_manifest=..., "
+                    "including every init_lineage manifest for a warm-started "
+                    "model) or mark the benchmark external=True — scoring "
+                    "without split provenance is how a sealed set gets quietly "
+                    "burned"
                 )
-            self.verify_provenance(fit_manifest)
+            manifests = (fit_manifest if isinstance(fit_manifest, (list, tuple))
+                         else [fit_manifest])
+            if not manifests:
+                raise SealedProvenanceError("fit_manifest list is empty")
+            for m in manifests:
+                self.verify_provenance(m)
         self.verify(case_ids)
         if self._queries_spent() >= self.query_budget:
             raise QueryBudgetExhausted(
