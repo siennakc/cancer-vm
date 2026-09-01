@@ -103,9 +103,25 @@ class V4WindowDetector:
         return [Candidate(box=b, score=float(p)) for b, p in zip(boxes, probs)]
 
 
+class PatchProposer:
+    """The handoff's 3b adapter: the 5-class patch detector as the proposer."""
+
+    def __init__(self):
+        from oncoscope.models.patch_detector import PatchDetector
+        self.det = PatchDetector(weights_path="runs/patch_v1/best_model.pt")
+        self.forwards = 0
+
+    def propose(self, pixels):
+        from oncoharness.reference.detector import Candidate
+        cands = self.det.propose(pixels)
+        self.forwards += 1
+        return [Candidate(box=c.box, score=c.score) for c in cands]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--proposer", choices=["v4window", "patch"], default="v4window")
     ap.add_argument("--out", default="results/ab_harness/report.json")
     ap.add_argument("--shrink", type=int, default=0,
                     help="max side for Arm B input; 0 (default) = native, the only "
@@ -134,15 +150,16 @@ def main():
     scores_a = head.predict_proba(Xa)
 
     # ---- Arm B: full harness around the same weights ----
-    detector = V4WindowDetector("runs/posttrain_v4/best_model.pt",
-                                "runs/finetune_v4_head/head.json")
+    detector = (PatchProposer() if args.proposer == "patch"
+                else V4WindowDetector("runs/posttrain_v4/best_model.pt",
+                                      "runs/finetune_v4_head/head.json"))
     root = Path("runs/ab_harness"); root.mkdir(parents=True, exist_ok=True)
     pipeline = HarnessPipeline(
         Toolbelt(ArtifactStore(str(root / "artifacts")),
                  EvidenceLedger(str(root / "ledger.jsonl")),
                  detector=detector),
         consistency_reads=3, min_reproduced=2,
-        policy_id="ab_v4_rule_adjudicated_v1",
+        policy_id=f"ab_{args.proposer}_rule_adjudicated",
     )
     scores_b, decisions, tool_calls, wall = [], [], [], []
     t0 = time.time()
@@ -153,6 +170,13 @@ def main():
         report = pipeline.run_case(c.case_id, px)
         wall.append((time.time() - t1) * 1000)
         scores_b.append(report.score)
+        # artifact store grows ~150 MB/case at native res and is never read
+        # back after adjudication (the ledger keeps the hashes) — purge per case
+        import shutil as _sh
+        _store = root / "artifacts"
+        if _store.exists():
+            for _p in _store.iterdir():
+                _p.unlink(missing_ok=True) if _p.is_file() else _sh.rmtree(_p, ignore_errors=True)
         decisions.append(str(report.decision))
         tool_calls.append(_n_calls(report.cost))
         if i % 25 == 0:

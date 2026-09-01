@@ -1,0 +1,58 @@
+{
+ "benchmark": "CBIS-DDSM official test split",
+ "n": 709,
+ "arm_b_input_max_side": "native",
+ "fair_comparison": true,
+ "arm_a_model_alone": {
+  "auroc": 0.7707,
+  "auroc_ci95": [
+   0.7256,
+   0.8141
+  ],
+  "sens_at_spec96": 0.2264,
+  "sens_at_spec96_ci95": [
+   0.148,
+   0.3257
+  ]
+ },
+ "arm_b_harness_rule_adjudicated": {
+  "auroc": 0.6805,
+  "auroc_ci95": [
+   0.6309,
+   0.7297
+  ],
+  "sens_at_spec96": 0.2061,
+  "sens_at_spec96_ci95": [
+   0.125,
+   0.2866
+  ],
+  "mean_tool_calls": 28.9,
+  "mean_wall_ms": 21951.0,
+  "model_forwards_total": 42540,
+  "decisions": {
+   "CaseDecision.defer_to_human": 160,
+   "CaseDecision.no_recall": 12,
+   "CaseDecision.recall": 537
+  }
+ },
+ "paired_delta_auroc_b_minus_a": {
+  "point": -0.0903,
+  "ci95": [
+   -0.1208,
+   -0.0603
+  ]
+ },
+ "deferral_analysis": {
+  "deferred": {
+   "n": 160,
+   "auroc_arm_a": 0.76,
+   "mean_abs_error_arm_a": 0.2865
+  },
+  "answered": {
+   "n": 549,
+   "auroc_arm_a": 0.7534,
+   "mean_abs_error_arm_a": 0.3783
+  },
+  "deferral_rate": 0.2257
+ }
+}
