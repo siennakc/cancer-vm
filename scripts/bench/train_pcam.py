@@ -7,7 +7,7 @@ benchmark we are about to take). ResNet-50 for architecture continuity with
 the mammography line.
 """
 from __future__ import annotations
-import argparse, io, sys, time
+import argparse, io, json, sys, time
 from pathlib import Path
 import numpy as np
 
@@ -87,7 +87,7 @@ def main():
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=args.epochs)
     lf = torch.nn.BCEWithLogitsLoss()
     run = Path("runs/pcam"); run.mkdir(parents=True, exist_ok=True)
-    best = -1
+    best, best_epoch, history = -1.0, None, []
     for ep in range(args.epochs):
         net.train(); t0 = time.time(); tot = n = 0
         for x, y in tl:
@@ -96,6 +96,7 @@ def main():
             loss.backward(); opt.step()
             tot += float(loss.detach()) * len(y); n += len(y)
         sched.step()
+        row = {"epoch": ep, "loss": round(tot / n, 4), "secs": round(time.time() - t0, 1)}
         msg = f"[pcam] ep{ep} loss={tot / n:.4f}"
         if vl:
             net.eval(); ys, ss = [], []
@@ -103,15 +104,39 @@ def main():
                 for x, y in vl:
                     ss.append(net(x.to(dev)).squeeze(1).cpu().numpy()); ys.append(y.numpy())
             a = auroc(np.concatenate(ys), np.concatenate(ss))
+            row["val_auroc"] = round(a, 4)
             msg += f" val_auroc={a:.4f}"
             if a > best:
-                best = a
+                best, best_epoch = a, ep
                 torch.save({"model": net.state_dict(), "epoch": ep, "val_auroc": a},
                            run / "best_model.pt")
         else:
             torch.save({"model": net.state_dict(), "epoch": ep}, run / "best_model.pt")
+        history.append(row)
         print(msg + f" ({time.time() - t0:.0f}s)", flush=True)
-    print(f"[pcam] done best val AUROC={best:.4f}", flush=True)
+
+    # The committed artifact behind any quoted number — a claim that exists
+    # only in a commit message is not a result (audit finding, 2026-08-31).
+    report = {
+        "benchmark": "PCam (PatchCamelyon) — VALIDATION split only",
+        "protocol_note": (
+            "PCam's own test split derives from CAMELYON16 TEST slides, which "
+            "this pipeline holds out for the slide-level benchmark — so the "
+            "official PCam test is deliberately never scored here. This number "
+            "is patch-level validation AUROC, a stage-1 health check, not a "
+            "leaderboard claim."),
+        "config": vars(args),
+        "n_train": len(tr), "n_valid": (len(va) if va else 0),
+        "train_prevalence": round(float(tr.y.mean()), 4),
+        "best_val_auroc": (round(best, 4) if best >= 0 else None),
+        "best_epoch": best_epoch,
+        "history": history,
+        "checkpoint": str(run / "best_model.pt"),
+    }
+    out = Path("results/bench_pcam/report.json")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(report, indent=1))
+    print(f"[pcam] done best val AUROC={best:.4f} -> {out}", flush=True)
 
 
 if __name__ == "__main__":
