@@ -30,6 +30,9 @@ class Wrap(Dataset):
         img, y = self.ds[i]
         x = torch.from_numpy(np.asarray(img, np.float32) / 255.0)
         x = x.permute(2, 0, 1) if x.ndim == 3 else x[None].repeat(3, 1, 1)
+        # 28 -> 224 upsample so the IN1K ResNet-50 sees its native scale
+        x = torch.nn.functional.interpolate(x[None], size=(224, 224),
+                                            mode="bilinear", align_corners=False)[0]
         if self.train:
             if torch.rand(()) < 0.5: x = torch.flip(x, (2,))
             k = int(torch.randint(0, 4, ()))
@@ -51,12 +54,12 @@ def multiclass_auc(y, probs):
 def run(name, epochs, dev):
     info = INFO[name]
     cls = getattr(medmnist, info["python_class"])
-    tr = Wrap(cls(split="train", download=True, size=224), True)
-    va = Wrap(cls(split="val", download=True, size=224), False)
-    te = Wrap(cls(split="test", download=True, size=224), False)
+    tr = Wrap(cls(split="train", download=True), True)
+    va = Wrap(cls(split="val", download=True), False)
+    te = Wrap(cls(split="test", download=True), False)
     n_cls = len(info["label"])
     print(f"[mm] {name}: train={len(tr)} test={len(te)} classes={n_cls}", flush=True)
-    tl = DataLoader(tr, batch_size=96, shuffle=True, num_workers=6, drop_last=True,
+    tl = DataLoader(tr, batch_size=512, shuffle=True, num_workers=6, drop_last=True,
                     persistent_workers=True)
     vl = DataLoader(va, batch_size=128, num_workers=3)
     el = DataLoader(te, batch_size=128, num_workers=3)
@@ -91,8 +94,8 @@ def run(name, epochs, dev):
     auc = multiclass_auc(y, probs)
     print(f"[mm] {name} TEST acc={acc:.4f} auc={auc:.4f}", flush=True)
     return {"dataset": name, "n_test": int(len(y)), "test_acc": round(acc, 4),
-            "test_auc": round(auc, 4), "epochs": epochs, "input": 224,
-            "arch": "resnet50_in1k_v2"}
+            "test_auc": round(auc, 4), "epochs": epochs, "input": 28,
+            "arch": "resnet50_in1k_v2", "protocol": "28px source, upsampled to 224"}
 
 
 def main():
