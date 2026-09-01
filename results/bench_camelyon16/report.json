@@ -1,0 +1,20 @@
+{
+ "benchmark": "CAMELYON16 official test set (129 slides, official reference.csv)",
+ "n": 129,
+ "tumor": 49,
+ "registered_aggregator": "top5_mean",
+ "auc_max": 0.8089,
+ "auc_top5_mean": 0.8268,
+ "auc_top20_mean": 0.8393,
+ "auc_top50_mean": 0.8133,
+ "auc_top100_mean": 0.787,
+ "auc_frac_over_0.5": 0.711,
+ "auc_frac_over_0.9": 0.7707,
+ "PRIMARY_auc": 0.8268,
+ "PRIMARY_ci95": [
+  0.7475,
+  0.8921
+ ],
+ "sens_macro_at_spec80": 0.955,
+ "sens_micro_at_spec80": 0.444
+}

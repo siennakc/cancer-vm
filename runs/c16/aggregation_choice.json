@@ -1,0 +1,5 @@
+{
+ "aggregation": "top5_mean",
+ "train_slide_auc": 1.0,
+ "n": 16
+}
