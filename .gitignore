@@ -43,3 +43,4 @@ data/metadata/*_series.json
 data/cache/
 data/bench/*/cases/
 data/raw/MIAS/
+!data/processed/roi_v1.jsonl
