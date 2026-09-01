@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "oncoscope-demo",
+      "runtimeExecutable": ".venv/bin/python",
+      "runtimeArgs": ["-m", "uvicorn", "oncoscope.serving.app:app", "--port", "8321", "--app-dir", "src"],
+      "port": 8321
+    }
+  ]
+}
