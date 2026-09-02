@@ -74,8 +74,9 @@ silently covered masses only.) `results/public_cbis/*.json` has the grids.
 
 ## Get the model
 
-GitHub releases (sha256 in notes): [`weights-v4`](../../releases/tag/weights-v4)
-(best, benchmark-eligible) · [`weights-v3`](../../releases/tag/weights-v3) ·
+GitHub releases (sha256 in notes): [`weights-v5hr`](../../releases/tag/weights-v5hr)
+(**champion**) · [`weights-v4`](../../releases/tag/weights-v4) ·
+[`weights-v3`](../../releases/tag/weights-v3) ·
 [`weights-v2`](../../releases/tag/weights-v2) (best internal-only).
 Each ships `best_model.pt` + `checkpoint.pt` (full optimizer state — resume
 training with `--resume`). Calibrated heads are committed in `results/*/head.json`.
