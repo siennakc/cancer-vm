@@ -29,7 +29,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 API = "https://services.cancerimagingarchive.net/nbia-api/services/v1"
-USER_AGENT = "oncoscope-data-ingest/0.1 (+https://github.com/siennakc/cancer-vm)"
+USER_AGENT = "oncoscope-data-ingest/0.1 (+https://github.com/siennakc/oncoscope)"
 
 
 @dataclass(frozen=True)

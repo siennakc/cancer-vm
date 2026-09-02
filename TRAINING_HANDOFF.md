@@ -1,6 +1,8 @@
 # Training-machine handoff — for the agent running the next session
 
-You are an AI agent working in the `cancer-vm` checkout on the training machine
+You are an AI agent working in the `oncoscope` checkout (formerly `cancer-vm` —
+renamed 2026-09-02; GitHub redirects the old remote, but update your origin URL)
+on the training machine
 (Apple Silicon, MPS, `data/raw/` populated with the 126 GB corpus, `.venv` with
 torch). This document is your work order. It was written by the agent working
 with Sienna on her machine on 2026-08-31/09-01; everything referenced here is
