@@ -1,17 +1,17 @@
-"""Local demo server: the v4 model, served honestly.
+"""Local demo server: the champion model, served honestly.
 
-Serves the MODEL ALONE — the measured champion. The agent-harness path was
-A/B-tested at −0.071 AUROC versus this configuration (results/ab_harness/),
-so a demo routing through it would showcase the worse system; the harness
-returns to serving if and when the patch-detector rematch clears the gate.
+Serves the MODEL ALONE — currently v5hr (patch-pretrained, high-res). The
+agent-harness path was A/B-tested three ways (window proposer, native input,
+patch-detector proposer) and lost every time (results/ab_harness/), so a demo
+routing through it would showcase the measured-worse system.
 
 Same preprocessing module as training (axiom of T-1.1: one decoder, one
 render path — train/serve skew is the silent killer). Every response carries
 the model's honest limits alongside its score.
 
 Run:  .venv/bin/python -m uvicorn oncoscope.serving.app:app --port 8321
-      (weights: gh release download weights-v4 --pattern best_model.pt
-       --dir runs/posttrain_v4)
+      (weights: gh release download weights-v5hr --pattern best_model.pt
+       --dir runs/posttrain_v5hr)
 
 **Not a medical device.** Research and education only.
 """
@@ -34,9 +34,9 @@ from ..data.dicom_canonical import load_canonical
 from ..models.encoder import FrozenEncoder
 from ..models.head import LogisticHead
 
-WEIGHTS = Path("runs/posttrain_v4/best_model.pt")
-HEAD = Path("results/posttrain_v4/head.json")
-OPERATING_POINT = Path("results/posttrain_v4/operating_point.json")
+WEIGHTS = Path("runs/posttrain_v5hr/best_model.pt")
+HEAD = Path("results/posttrain_v5hr/head.json")
+OPERATING_POINT = Path("results/posttrain_v5hr/operating_point.json")
 
 DISCLAIMER = ("NOT A MEDICAL DEVICE. Research/education demo only. No output "
               "may inform any diagnosis, screening, or treatment decision.")
@@ -44,8 +44,8 @@ LIMITS = [
     "Calibrated on biopsy-enriched cohorts (~58% malignant); probabilities do "
     "not transfer to screening prevalence (~0.5%) or to new sites without "
     "recalibration — externally (MIAS) calibration error reached ECE 0.49.",
-    "Weak slice: masses in heterogeneously dense (BI-RADS c) breasts — CI "
-    "includes chance there.",
+    "Weakest slice: extremely dense (BI-RADS d) breasts (AUROC 0.70 vs 0.78 "
+    "overall); the patch-pretrained v5hr closed most of the former density-c gap.",
     "Trained on CBIS-DDSM (US, digitized film) and CMMD (China, FFDM); "
     "anything else is out of distribution.",
 ]
@@ -85,8 +85,8 @@ async def analyze(file: UploadFile = File(...)) -> dict:
     threshold = state["op"]["threshold"]
     return {
         "disclaimer": DISCLAIMER,
-        "model": "oncoscope v4 (high-res post-train, official CBIS test AUROC "
-                 "0.771 [0.726-0.815])",
+        "model": "oncoscope v5hr (patch-pretrained + high-res post-train, "
+                 "official CBIS test AUROC 0.775 [0.731-0.817])",
         "calibrated_probability": round(prob, 4),
         "operating_point": {
             "threshold": round(threshold, 4),

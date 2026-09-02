@@ -21,12 +21,18 @@ Image-level malignant-vs-benign, AUROC with patient-clustered 95% CIs.
 | v1 frozen IN1K + refit head | 0.628 [0.577–0.680] | 0.512 (chance) | 0.707 |
 | v2 fine-tuned (`weights-v2`) | *disqualified⁴* | 0.733 [0.65–0.81] | **0.8165** |
 | v3 fine-tuned, quarantined (`weights-v3`) | 0.742 [0.694–0.787] | 0.664 [0.58–0.74] | — |
-| **v4 + high-res post-train (`weights-v4`)** | **0.771 [0.726–0.814]** | **0.736 [0.66–0.81]** | — |
+| v4 + high-res post-train (`weights-v4`) | 0.771 [0.726–0.814] | 0.736 [0.66–0.81] | — |
 | v5 patch-warm-start, 448px | 0.735 [0.688–0.780] — a wash⁵ | — | — |
+| **v5hr patch + high-res (`weights-v5hr`)** | **0.775 [0.731–0.817]** · sens@96 **0.267** | — | — |
 
-Public-benchmark numbers re-scored 2026-09-01 against the corrected
-any-malignant gold with verified encoder lineage; v3/v4 moved <0.001 (the 11
-fixed labels were already ranked correctly by the models).
+The patch recipe pays off only at high resolution: a wash at 448px, champion
+at 1152×896 — with the gains exactly where lesion-scale features should show
+(sens@96%spec 0.219→0.267; density-c 0.727→0.774, closing most of the
+dense-breast gap; density-d, at 0.705, is now the weakest slice).
+4-member ensemble (v3+v4+v5+v5hr): 0.783 point estimate, but the paired delta
+vs v5hr is +0.007 [−0.009, +0.024] — below the pre-registered reportable
+gate, so v5hr stands alone as champion. Public-benchmark numbers scored
+against the corrected any-malignant gold with verified encoder lineage.
 
 ¹ 709 images from the **349 patients** named in the official mass+calc test
 CSVs. That is a patient-complete *superset* of the official 645-image test
@@ -59,12 +65,12 @@ CC 0.786 / MLO 0.757. The resolution bump moved calcifications most
 (v3: 0.736 → 0.803) — exactly the microcalcification-detail mechanism the
 literature predicts.
 
-Density slices (v4, re-scored 2026-09-01, now covering all 709 after the
-column-spelling fix): a 0.942, b 0.773, **c 0.727**, d 0.726. The earlier
-"density-c indistinguishable from chance" reading was an artifact of the grid
-silently covering masses only — with calcifications included, dense-breast
-performance is weak but real (c: [0.630–0.813]). Dense breasts (c/d) remain
-the soft half of the model. `results/public_cbis/*.json` has the full grid.
+Density slices (full 709-image grid): v4 ran a/b/c/d = 0.942/0.773/0.727/0.726;
+**v5hr runs 0.883/0.769/0.774/0.705** — the patch features lifted the
+historically weak density-c slice to parity with b, at some cost to the easy
+density-a slice; extremely dense (d) breasts are now the one soft spot.
+(The earlier "density-c ≈ chance" reading was an artifact of a grid that
+silently covered masses only.) `results/public_cbis/*.json` has the grids.
 
 ## Get the model
 
@@ -163,13 +169,16 @@ python3.12 -m venv .venv && .venv/bin/pip install -e '.[dev]' pandas openpyxl
 Data licences and citations: `DATA_LICENSES.md`. Task provenance: `TASKSHEET.md`.
 Full intervention-by-intervention ledger (what made it better, what didn't): `TRAINING_HISTORY.md`.
 
-**Harness A/B** (same weights, same benchmark): model alone 0.771 vs the
-rule-adjudicated harness — **Δ −0.071** with the original 1600px input, and
-**Δ −0.090 [−0.121, −0.060]** in the fair native-resolution re-run
-(2026-09-01). The audit's fairness caveat resolved in the unexpected
-direction: giving the harness full resolution made it *worse*, which pins the
-fault on window fragmentation (out-of-distribution sub-reads destroying the
-calibrated whole-image signal), not resolution. The honest answer to "does
-the harness help?" remains **no — and the mechanism is now isolated**:
-`results/ab_harness/CARD.md`. The decisive rematch (patch detector as
-proposer, `--proposer patch`) is queued.
+**Harness A/B — final verdict (three configurations, all negative).**
+Same weights, same benchmark, rule-adjudicated harness vs model alone:
+Δ −0.071 (original, 1600px input) · Δ −0.090 [−0.121, −0.060] (fair,
+native input) · **Δ −0.097 [−0.159, −0.039] with the patch model as a real
+localizing proposer** (2026-09-02). The pre-registered rescue condition — a
+detector that can point at lesions — did not rescue it: fragment-and-
+reaggregate loses to one calibrated whole-image read in every configuration
+tested. One nuance preserved for the record: the detector-driven harness
+*helped the operating point* (sens@96 0.257 vs 0.219 alone) while hurting
+ranking — a thread for a future score-fusion design, not a reprieve for this
+one. The harness lane is closed for this generation; the honest answer to
+"does the harness help?" is **no, measured three ways**:
+`results/ab_harness/CARD.md`.
