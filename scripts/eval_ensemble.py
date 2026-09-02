@@ -51,6 +51,8 @@ DEFAULT_MEMBERS = {
                      "runs/posttrain_v4/best_model.pt", (1152, 896)),
     "finetune_v5": ("resnet50_ft_v5_448_raw", "runs/finetune_v5_head/head.json",
                     "runs/finetune_v5/best_model.pt", 448),
+    "posttrain_v5hr": ("resnet50_ft_v5hr_1152x896_raw", "runs/finetune_v5hr_head/head.json",
+                       "runs/posttrain_v5hr/best_model.pt", (1152, 896)),
 }
 FLIPS = ("identity", "h", "v", "hv")
 

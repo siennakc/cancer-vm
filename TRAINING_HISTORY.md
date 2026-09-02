@@ -197,3 +197,28 @@ mechanism. Deferral rate fell to 22.6% at native res but deferrals remain
 uninformative (model-alone AUROC 0.760 deferred vs 0.753 answered). The
 pre-registered rematch — patch detector as proposer — is wired
 (`ab_harness_bench.py --proposer patch`) and queued.
+
+## Part 8 — the patch stage, the rematches, and the ensemble (2026-09-01/02)
+
+Run per TRAINING_HANDOFF.md; every rail held or its breach is recorded.
+
+| run | result |
+|---|---|
+| Patch classifier (31,299 ROI patches, 5-class) | cal macro-AUROC **0.884**, lineage 45cc17cb…, untainted |
+| v5 = patch warm-start @448 | **wash**: cal 0.8336 vs v3 0.8331; bench 0.735 vs 0.742 |
+| v5hr = v5 + 1152×896 post-train | **champion**: bench **0.7752** [0.731–0.817], sens@96 **0.267** (v4 0.226), mass/calc balanced 0.778/0.776, **density-c 0.774** (was ~0.63 in v3-era — the open problem largely closed) |
+| Corrected-gold re-scores | v3 0.7416, v4 0.7707 (flat; sens@96 up), density grids full-width |
+| 3a harness A/B, native-res input | **−0.090** [−0.121, −0.060] — worse than the 1600px −0.071: fragmentation, not resolution, is the fault |
+| 3b harness A/B, patch proposer | **−0.097** [−0.159, −0.039] — a localizing proposer does not rescue the rule-adjudicated aggregation (detector-pure; whole-image-anchor fusion remains the one untested corner). Note: sens@96 0.257 > 0.226 — ranking is damaged, the high-spec operating point is not |
+| Ensemble v3+v4+v5, mean-prob | +0.004 [−0.015, +0.024] vs v4 — below the reportable gate |
+
+Verdict on the three open questions: **patch recipe** — pays off only through
+the high-res stage (wash at 448); **harness lane** — negative in all three
+tested configurations, ball now in the harness aggregation's court;
+**ensemble** — flat without TTA (TTA + v5hr member run pending).
+
+Operational notes for the record: a session restart killed the overnight
+bench queues (MedMNIST/ISIC-v2 requeued); three concurrent trainers OOM'd the
+first patch run (retrained exclusive); the native-res A/B filled the disk at
+131 MB free via the artifact store (~150 MB/case) — the runner now purges
+per case, the ledger keeps the evidence hashes.
