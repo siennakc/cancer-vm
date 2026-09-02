@@ -4,29 +4,30 @@
  "members": {
   "finetune_v3": 0.7416,
   "posttrain_v4": 0.7707,
-  "finetune_v5": 0.735
+  "finetune_v5": 0.735,
+  "posttrain_v5hr": 0.7752
  },
  "aggregation": "mean of calibrated probabilities",
  "overall": {
   "n": 709,
-  "auroc": 0.7748,
+  "auroc": 0.7826,
   "auroc_ci95": [
-   0.7289,
-   0.8174
+   0.7379,
+   0.824
   ],
-  "sens_at_spec96": 0.2939,
+  "sens_at_spec96": 0.2736,
   "sens_at_spec96_ci95": [
-   0.1547,
-   0.3883
+   0.1604,
+   0.395
   ],
-  "ece_adaptive": 0.1091
+  "ece_adaptive": 0.1121
  },
  "paired_delta_vs_best_single": {
-  "best_single": "posttrain_v4",
-  "point": 0.004,
+  "best_single": "posttrain_v5hr",
+  "point": 0.0074,
   "ci95": [
-   -0.0154,
-   0.0242
+   -0.0091,
+   0.0239
   ],
   "reportable_gain": false
  },

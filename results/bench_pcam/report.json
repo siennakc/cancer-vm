@@ -1,0 +1,17 @@
+{
+ "benchmark": "PCam (PatchCamelyon) \u2014 VALIDATION split only",
+ "protocol_note": "PCam's own test split derives from CAMELYON16 TEST slides, which this pipeline holds out for the slide-level benchmark \u2014 so the official PCam test is deliberately never scored here. This number is patch-level validation AUROC, a stage-1 health check, not a leaderboard claim.",
+ "config": {
+  "epochs": 0,
+  "batch": 256,
+  "lr": 0.0002,
+  "train_shards": 13
+ },
+ "n_train": 262144,
+ "n_valid": 32768,
+ "train_prevalence": 0.5,
+ "best_val_auroc": null,
+ "best_epoch": null,
+ "history": [],
+ "checkpoint": "runs/pcam/best_model.pt"
+}
